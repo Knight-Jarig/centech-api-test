@@ -1,0 +1,538 @@
+type ProductSearch {
+  filters: [ProductsFilter]
+  products: [Product]
+  sorting: [ProductsSorting]
+  total_count: Int
+}
+
+type ProductOption {
+  value: String
+  label: String
+}
+
+type Product {
+  id: String
+  attribute_set_id: Int
+  sku: String
+  name: String
+  price: Float
+  breadcrumbs: [Breadcrumbs]
+  status: Int
+  visibility: Int
+  type_id: ProductType
+  created_at: String
+  updated_at: String
+  product_links: [ProductLink]
+  options: [ProductOption]
+  media_gallery_entries: [MediaGalleryEntry]
+  tier_prices: [ProductsTierPrices]
+  image: String
+  small_image: String
+  thumbnail: String
+  url_key: String
+  description: String
+  short_description: String
+  special_price: Float
+  special_from_date: String
+  special_to_date: String
+  meta_title: String
+  meta_keyword: String
+  meta_description: String
+  marketplace_product_type_option: String
+  marketplace_seller_option: String
+  custom_attributes(filter: [String]): JSON
+  custom_attributes_option(filter: [String]): JSON
+  extension_attributes: ProductsExtensionAttributes
+  cart_price_rule_overlays: [ProductsCartPriceRuleOverlay!]
+  """
+  configurable product children
+  """
+  configurable_product_items: [Product]
+  """
+  min price of configurable children
+  """
+  price_min: Float
+  """
+  max price of configurable children
+  """
+  price_max: Float
+  """
+  min sale price calculate from special price and price
+  """
+  sale_price_min: Float
+  """
+  max sale price calculate from special price and price
+  """
+  sale_price_max: Float
+  """
+  tags (product.custom_attributes.product_tags)
+  """
+  product_tags: String
+  """
+  metket place feature
+  """
+  marketplace: MarketPlaceSeller
+  isReview: Boolean
+  online_salable: Boolean
+  offline_salable: Boolean
+}
+
+type MarketPlaceSeller {
+  """
+  seller name (product.custom_attributes_option[attribute_code = 'marketplace_seller'])
+  """
+  seller_id: ID
+  seller: String
+  seller_url_key: String
+}
+
+enum ProductLinkType {
+  related
+  crosssell
+  upsell
+}
+
+enum ProductType {
+  simple
+  configurable
+  grouped
+  virtual
+  bundle
+  downloadable
+  giftcard
+  unknown
+}
+
+type ProductLink {
+  sku: String
+  link_type: ProductLinkType
+  linked_product_sku: String
+  linked_product_type: ProductType
+  position: Int
+  product: Product
+}
+
+type ProductsCustomAttributes {
+  brand_name: String
+  free_gift: String
+  free_delivery: String
+  free_text_flag: String
+  free_text_on_top: String
+  badge: String
+  show_badge: String
+  free_installation: String
+  product_tags: String
+  related_to: String
+  home_branch: String
+  attached_pdf_file: String
+  barcode: String
+  model: String
+  shipping_methods: String
+  payment_methods: String
+}
+
+type ProductsExtensionAttributes {
+  ispu_salable: Boolean
+  free_shipping_amount: String
+  category_links: [String]
+  category_paths: [CategoryPath]
+  stock_item: StockItem
+  overall_rating: ProductsExtensionAttributesOverallRating
+  reviews: [ProductsExtensionAttributesReviews]
+  specification_attributes: [ProductsSpecialAttributes]
+  brand: ProductsExtensionAttributesBrand
+  t1c_redeemable_points: [String]
+  t1c_earn_points_estimate: [String]
+  # website_ids: [String]
+  installment_plans: [InstallmentPlan]
+  cc_promotions: [ProductsCcPromotionAttributes]
+  salable: Boolean
+  seller_url_key: String
+  overlays: [ProductsExtensionAttributesOverlay]
+  configurable_product_links: [String]
+  configurable_product_options: [ConfigurableProductOptions]
+  size_map: ProductSizeMap
+  size_maps: [ProductSizeMap]
+  suggest_promotions: [ProductsExtensionAttributesSuggestPromotions!]
+  flash_sale_price: [ProductsExtensionAttributesFlashSalePrice]
+}
+
+type ProductsExtensionAttributesFlashSalePrice {
+  start_date: String!
+  end_date: String!
+  special_price: String!
+}
+
+type ProductsExtensionAttributesSuggestPromotions {
+  promotion_name: String!
+  full_condition: String!
+  start_datetime: String
+  end_datetime: String
+}
+
+type ProductSizeMap {
+  type: String
+  size: String
+}
+
+type ConfigurableProductOptions {
+  id: Int
+  attribute_id: String
+  label: String
+  position: Int
+  values: [ProductOptionsValues]
+}
+
+type ProductOptionsValues {
+  value_index: Int
+  extension_attributes: ProductOptionsExtensionAttributes
+}
+
+type ProductOptionsExtensionAttributes {
+  label: String
+  frontend_value: String
+  frontend_type: String
+  products: [Int]
+}
+
+type CategoryPath {
+  category_id: Int
+  name: String
+  level: Int
+  parent_id: Int
+}
+
+type StockItem {
+  qty: Int
+  is_in_stock: Boolean
+  use_config_min_qty: Boolean
+  min_qty: Int
+  use_config_min_sale_qty: Boolean
+  min_sale_qty: Int
+  use_config_max_sale_qty: Boolean
+  max_sale_qty: Int
+  item_id: Int
+  product_id: Int
+  stock_id: Int
+  is_qty_decimal: Boolean
+  backorders: Int
+  use_config_backorders: Boolean
+  low_stock_date: String
+  notify_stock_qty: Int
+  use_config_notify_stock_qty: Boolean
+  manage_stock: Boolean
+  use_config_manage_stock: Boolean
+  stock_status_changed_auto: Int
+  qty_increments: Int
+  use_config_qty_increments: Boolean
+  enable_qty_increments: Boolean
+  use_config_enable_qty_increments: Boolean
+  is_decimal_divided: Boolean
+  show_default_notification_message: Boolean
+}
+
+type MediaGalleryEntry {
+  disabled: Boolean
+  file: String
+  id: Int
+  label: String
+  media_type: String
+  position: Int
+  types: [String]
+  extension_attributes: MediaGalleryExtension
+}
+
+type MediaGalleryExtension {
+  video_content: VideoContent
+}
+
+type VideoContent {
+  media_type: String
+  video_provider: String
+  video_url: String
+  video_title: String
+  video_description: String
+  video_metadata: String
+}
+
+type Breadcrumbs {
+  category_id: ID!
+  level: Int
+  name: String
+  url: String
+}
+
+type ProductsTierPrices {
+  price: Int
+  original_price: Int
+  customer_group_id: Int
+  is_discount: Boolean
+}
+
+type ProductsCategory {
+  category_id: Int
+  name: String
+  level: Int
+  parent_id: String
+  url_key: String
+  url_path: String
+  is_parent: Boolean
+}
+
+type ProductsStock {
+  qty: Int
+  is_in_stock: String
+}
+
+interface InstallmentPlanInterface {
+  installmentplan_id: ID!
+  name: String
+  bank_id: Int
+  bank: InstallmentBank
+  currency: String
+  period: String
+  merchant_rate: String
+  customer_rate: String
+  interest_type: String
+  installment_type: String
+  min_amount: String
+  max_amount: String
+  active: String
+  valid_from: String
+  valid_until: String
+  create: String
+}
+
+type InstallmentPlan implements InstallmentPlanInterface {
+  installmentplan_id: ID!
+  name: String
+  bank_id: Int
+  bank: InstallmentBank
+  currency: String
+  period: String
+  merchant_rate: String
+  customer_rate: String
+  interest_type: String
+  installment_type: String
+  min_amount: String
+  max_amount: String
+  active: String
+  valid_from: String
+  valid_until: String
+  create: String
+}
+
+type InstallmentBank {
+  bank_id: String
+  name: String
+  bank_image: String
+  icon: String
+  color: String
+  active: String
+  create: String
+  update: String
+}
+
+type ProductsSpecialAttributes {
+  label: String
+  attribute_code: String
+  value: JSON
+}
+
+type ProductsCcPromotionAttributes {
+  discount: Float
+  bank_icon: String
+  bank_color: String
+  sales_rule_id: String
+  promotion_id: String
+}
+
+type ProductsExtensionAttributesOverallRating {
+  total_vote: Int
+  one_star: Int
+  four_star: Int
+  five_star: Int
+  three_star: Int
+  two_star: Int
+  rating: Float
+  rounded_rating: Float
+}
+
+type ProductsExtensionAttributesOverlay {
+  overlay_image: String
+  overlay_status: String
+  mobile_overlay_status: String
+  overlay_start_date: String
+  overlay_end_date: String
+  overlay_position: String
+}
+
+type ProductsCartPriceRuleOverlay {
+  id: ID!
+  overlay_image: String
+  display_priority: Int
+}
+
+type ImagePath {
+  path: String!
+}
+
+type ProductsExtensionAttributesReviews {
+  nickname: String
+  rating_items: ProductsRatingItems
+  created_at: String
+  title: String
+  detail: String
+  is_validate: Boolean
+  images: [ImagePath!]
+  region_id: Int
+  extension_attributes: ProductsExtensionAttributesReviewsExtensionAttributes
+}
+
+type ProductsExtensionAttributesReviewsExtensionAttributes {
+  review_images: [String!]
+  region_id: Int
+}
+
+type ProductsRatingItems {
+  rating_id: Int
+  rating: Int
+  category: String
+}
+
+type ProductsExtensionAttributesBrand {
+  meta_title: String
+  description: String
+  website_ids: [String]
+  extension_attributes: ProductsExtensionAttributesBrandExtensionAttributes
+  content: [String]
+  brand_id: Int
+  url_key: String
+  meta_description: String
+  brand_additional_products: [String]
+  attribute_id: Int
+  name: String
+  option_id: Int
+  is_featured: String
+  attribute_code: String
+  logo: String
+}
+
+type ProductsExtensionAttributesBrandExtensionAttributes {
+  product_name_special: Boolean
+  hide_product_original_price: Boolean
+  hide_t1c_redeemable_amount: Boolean
+  allow_product_review: Boolean
+  product_count: Int
+  parent_category: Int
+  position: Int
+  banners: [String]
+  product_collections: [String]
+  menu_css: String
+  content_css: String
+  brand_image_url: String
+}
+
+type ProductsStockItem {
+  qty: Int
+  is_in_stock: String
+  min_qty: Int
+  min_sale_qty: Int
+  use_config_max_sale_qty: String
+  max_sale_qty: Int
+}
+
+type ProductsFilter {
+  name: String
+  attribute_code: String
+  items: [ProductsFilterItems]
+  position: Int
+}
+
+type ProductsFilterItems {
+  label: String
+  value: String
+  count: Int
+  custom_attributes: ProductsFilterItemsAttributes
+}
+
+type ProductsFilterItemsAttributes {
+  level: Int
+  parent_id: Int
+  url_key: String
+  url_path: String
+}
+
+type ProductsSorting {
+  code: String
+  name: String
+}
+
+input ProductUrlKeyQuery {
+  url: String!
+}
+
+type SearchSuggestionLists {
+  products: [ProductItem]
+  terms: [TermItem]
+  categories: [CategoryItem]
+}
+
+type CategoryItem {
+  breadcrumb: [String]
+  count: Int
+  id: Int
+  level: Int
+  title: String
+  url: String
+}
+
+type ProductItem {
+  id: ID
+  title: String
+  image: String
+  url: String
+  brand_name: String
+  price: Float
+  count: Int
+  sku: String
+  final_price: Float
+  original_price: Float
+  custom_attributes: JSON
+}
+type TermItem {
+  text: String
+  score: Float
+  frequency: Int
+}
+input SearchTermsInput {
+  storeCode: String
+  keyword: String
+  productsSize: Int
+  termsSize: Int
+}
+
+input CompareProductInput {
+  sku: [String]
+}
+
+type CompareProducts {
+  attribute_code: String
+  attribute_label: String
+  items: [CompareProductsItem]
+}
+
+type CompareProductsItem {
+  sku: String
+  value: String
+}
+
+extend type Query {
+  product(url: String, storeCode: String): Product
+  productSearch(filter: FiltersQuery, storeCode: String): ProductSearch
+  productBySku(sku: String!, storeCode: String): Product
+  searchTrending(storeCode: String): [TermItem]
+  searchSuggestion(searchTermsInput: SearchTermsInput): SearchSuggestionLists
+  compareProducts(input: CompareProductInput): [CompareProducts]
+  stockItem(sku: String!): StockItem
+}

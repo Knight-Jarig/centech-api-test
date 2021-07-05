@@ -1,0 +1,12 @@
+
+type V2InstagramPostsResponse {
+  id: ID
+  mediaType: String
+  mediaUrl: String
+  permalink: String
+  timestamp: DateTime
+}
+
+extend type Query {
+  v2GetInstagramPosts: [V2InstagramPostsResponse]
+}

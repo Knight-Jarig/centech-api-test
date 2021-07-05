@@ -1,0 +1,68 @@
+type Register {
+  data: Customer
+  message: String
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+  firstname: String!
+  lastname: String!
+  is_subscribed: Boolean
+  storeId: Int
+
+  dob: String
+  gender: Gender
+  tax_id: String
+
+  phone: String
+  language: String
+  t1c_no: String
+  t1c_phone: String
+  custom_attributes: JSON
+  accept_consents: [ConsentType!]
+}
+
+input LazyRegisterInput {
+  email: String!
+  password: String!
+  firstname: String!
+  lastname: String!
+  is_subscribed: Boolean
+  storeId: Int
+  orderId: Int!
+  accept_consents: [ConsentType!]
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+  guestToken: String
+  is_jwt: Boolean
+  isReplaceCart: Boolean
+}
+
+type LoginResponse {
+  token: String
+}
+
+type UpdateCustomerAddressesRegion {
+  region_code: String
+  region: String
+  region_id: Int
+}
+
+input ResetPasswordInput {
+  newPassword: String!
+  email: String!
+  resetToken: String!
+}
+
+extend type Mutation {
+  login(input: LoginInput!): LoginResponse
+  register(input: RegisterInput!): Register
+  lazyRegister(input: LazyRegisterInput!): Register
+  facebookLogin(social_id: String!, customerToken: String): LoginResponse
+  forgotPassword(storeCode: String, email: String!): ResponseMessage
+  resetPassword(input: ResetPasswordInput): ResponseMessage
+}

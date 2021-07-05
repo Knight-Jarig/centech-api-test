@@ -1,0 +1,60 @@
+type Regions {
+  region_id: String
+  country_id: String
+  code: String
+  default_name: String
+  sort_order: String
+  name: String
+}
+
+type RegionByPostCode {
+  region_id: String
+  country_id: String
+  code: String
+  default_name: String
+  name: String
+  sort_order: String
+  district: [District]
+}
+
+type District {
+  district_id: String
+  country_id: String
+  region_id: String
+  region_code: String
+  code: String
+  default_name: String
+  name: String
+  subdistrict: [SubDistrict]
+}
+
+type SubDistrict {
+  subdistrict_id: String
+  country_id: String
+  district_id: String
+  district_code: String
+  code: String
+  default_name: String
+  zip_code: String
+  name: String
+}
+
+input RegionPostCode {
+  postcode: String
+}
+
+input RegionId {
+  regionId: String
+}
+
+input SubRegionId {
+  regionId: String
+  districtId: String
+}
+
+extend type Query {
+  regions(storeCode: String): [Regions]
+  regionByPostCode(storeCode: String, input: RegionPostCode): RegionByPostCode
+  districts(storeCode: String, input: RegionId): [District]
+  subDistricts(storeCode: String, input: SubRegionId): [SubDistrict]
+}

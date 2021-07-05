@@ -1,0 +1,483 @@
+enum V2ProductType {
+  SIMPLE
+  CONFIGURABLE
+  BUNDLE
+  VIRTUAL
+}
+
+enum V2MediaType {
+  IMAGE
+  VIDEO
+}
+
+type V2PriceSummary {
+  original: Float!
+  final: Float!
+  discount: V2Discount
+}
+
+type V2Discount {
+  amount: Float!
+  percentage: Float!
+  effectiveDateRange: V2DateRange
+}
+
+type V2DateRange {
+  from: DateTime
+  to: DateTime
+}
+
+type V2Media {
+  id: ID!
+  type: V2MediaType!
+  url: String!
+  title: String!
+  types: [String]
+
+  storeId: String
+  provider: String
+  description: String
+  metadata: String
+}
+
+type V2Breadcrumb {
+  id: ID!
+  title: String!
+  urlKey: String!
+  level: Int!
+}
+
+type V2Preorder {
+  shippingDateTime: DateTime!
+}
+
+type V2Promotion {
+  id: String!
+  title: String!
+  description: String!
+  effectiveDateRange: V2DateRange!
+}
+
+type V2Bank {
+  id: ID!
+  name: String!
+  imageUrl: String!
+}
+
+type V2AmountRange {
+  min: Float!
+  max: Float!
+}
+
+type V2InstallmentPlan {
+  id: ID!
+  title: String!
+  period: Int!
+  interestRate: Float!
+  validDateRange: V2DateRange!
+  amountRange: V2AmountRange!
+  bank: V2Bank!
+}
+
+type V2The1Redemption {
+  earnPoint: Int!
+  redeemPoint: Int!
+}
+
+type V2FlashdealQuantity {
+  sale: Int!
+  available: Int!
+  sold: Int!
+}
+
+type V2Flashdeal {
+  effectiveDateRange: V2DateRange!
+  quantity: V2FlashdealQuantity!
+}
+
+type V2Seller {
+  id: String!
+  name: String!
+}
+
+type V2Reviewer {
+  name: String!
+  email: String
+  province: Place
+}
+
+type V2Review {
+  id: ID!
+  title: String
+  detail: String
+  imageUrls: [String!]!
+  reviewer: V2Reviewer!
+  rating: Float!
+  createdAt: DateTime
+}
+
+enum V2ConfigurableOptionType {
+  SWATCH_TEXT
+  SWATCH_COLOR
+  SWATCH_IMAGE
+}
+
+type V2ConfigurableOptionValue {
+  id: ID!
+  type: V2ConfigurableOptionType!
+  label: String
+  colorCode: String
+  url: String
+}
+
+type V2ConfigurableOption {
+  id: ID!
+  label: String!
+  attributeCode: String!
+  values: [V2ConfigurableOptionValue!]!
+}
+
+type V2ConfigurableProductPriceRange {
+  original: [Float!]!
+  final: [Float!]!
+  discount: [V2Discount!]
+}
+
+type V2ProductLabelOption {
+  id: String
+  label: String
+}
+
+type V2ProductOption {
+  id: ID!
+  label: String!
+  attributeCode: String!
+  value: V2ConfigurableOptionValue!
+}
+
+type V2ConfigurableProductChild {
+  options: [V2ProductOption!]!
+  product: V2Product!
+}
+
+type V2Rating {
+  average: Float!
+  totalVoteCount: Int!
+  fiveStar: Int
+  fourStar: Int
+  threeStar: Int
+  twoStar: Int
+  oneStar: Int
+  roundedRating: Float
+}
+
+enum V2ProductFlag {
+  NEW
+  MARKETPLACE
+  ONLINE_EXCLUSIVE
+  GIFT_WRAPPING
+  IN_STOCK
+  ONLY_AT_CENTRAL
+  BEAUTY
+  ALLOW_RETURN
+  ALLOW_EXPRESS
+  PRE_ORDER
+  BY_ORDER
+  ONLINE_SALABLE
+  OFFLINE_SALABLE
+  SHOW_PRODUCT_ORIGINAL_PRICE
+}
+
+type V2PurchaseLimit {
+  quantity: V2AmountRange!
+}
+
+enum V2ShippingMethod {
+  STANDARD_PICK_UP
+  TWO_HOURS_PICK_UP
+  STANDARD_DELIVERY
+  SAME_DAY_DELIVERY
+  NEXT_DAY_DELIVERY
+  THREE_HOURS_DELIVERY
+}
+
+enum V2PaymentMethod {
+  CASH_ON_DELIVERY
+  FULL_PAYMENT
+  INSTALLMENT
+  BANK_TRANSFER
+  PAY_AT_STORE
+  LINE_PAY
+}
+
+type V2ProductLinks {
+  related: [V2Product!]!
+  upSell: [V2Product!]!
+  crossSell: [V2Product!]!
+  similar: [V2Product!]!
+}
+
+type V2InventoryStock {
+  sku: String!
+  quantity: Int!
+}
+
+interface V2Product {
+  id: ID!
+  brand: V2Brand
+  breadcrumbs: [V2Breadcrumb!]!
+  categories: [V2Category!]!
+  mediaGallery: [V2Media!]!
+  urlKey: String!
+  name: String!
+  priceSummary: V2PriceSummary!
+  sku: String!
+  type: V2ProductType!
+  overlayImageUrl: String
+  installmentPlans: [V2InstallmentPlan!]!
+  the1Redemption: V2The1Redemption
+  thumbnailUrl: String
+  description: String!
+  shortDescription: String
+  purchaseLimit: V2PurchaseLimit
+  shippingMethods: [V2ShippingMethod!]!
+  paymentMethods: [V2PaymentMethod!]!
+  badge: String
+
+  flags: [V2ProductFlag!]!
+
+  seller: V2Seller!
+
+  preorder: V2Preorder
+  promotions: [V2Promotion!]!
+  promotionTag: String
+  flashdeal: V2Flashdeal
+  reviews: [V2Review!]!
+  rating: V2Rating
+  links: V2ProductLinks!
+  createdAt: DateTime
+  collectionName: String
+  labelOptions: [V2ProductLabelOption]
+}
+
+type V2SimpleProduct implements V2Product {
+  id: ID!
+  brand: V2Brand
+  breadcrumbs: [V2Breadcrumb!]!
+  categories: [V2Category!]!
+  urlKey: String!
+  mediaGallery: [V2Media!]!
+  name: String!
+  priceSummary: V2PriceSummary!
+  sku: String!
+  type: V2ProductType!
+  installmentPlans: [V2InstallmentPlan!]!
+  the1Redemption: V2The1Redemption
+  overlayImageUrl: String
+  thumbnailUrl: String
+  description: String!
+  shortDescription: String
+  purchaseLimit: V2PurchaseLimit
+  shippingMethods: [V2ShippingMethod!]!
+  paymentMethods: [V2PaymentMethod!]!
+
+  badge: String
+
+  flags: [V2ProductFlag!]!
+
+  seller: V2Seller!
+
+  preorder: V2Preorder
+  promotions: [V2Promotion!]!
+  promotionTag: String
+  flashdeal: V2Flashdeal
+  reviews: [V2Review!]!
+  rating: V2Rating
+  links: V2ProductLinks!
+  createdAt: DateTime
+  collectionName: String
+  labelOptions: [V2ProductLabelOption]
+
+  # Stock
+  inventoryStock: V2InventoryStock
+}
+
+type V2ConfigurableProduct implements V2Product {
+  id: ID!
+  brand: V2Brand
+  breadcrumbs: [V2Breadcrumb!]!
+  categories: [V2Category!]!
+  mediaGallery: [V2Media!]!
+  name: String!
+  urlKey: String!
+  priceSummary: V2PriceSummary!
+  priceRange: V2ConfigurableProductPriceRange!
+  sku: String!
+  type: V2ProductType!
+  installmentPlans: [V2InstallmentPlan!]!
+  the1Redemption: V2The1Redemption
+  overlayImageUrl: String
+  thumbnailUrl: String
+  description: String!
+  shortDescription: String
+  purchaseLimit: V2PurchaseLimit
+  shippingMethods: [V2ShippingMethod!]!
+  paymentMethods: [V2PaymentMethod!]!
+
+  options: [V2ConfigurableOption!]!
+  children: [V2ConfigurableProductChild!]!
+
+  badge: String
+
+  preorder: V2Preorder
+  flashdeal: V2Flashdeal
+  rating: V2Rating
+
+  flags: [V2ProductFlag!]!
+  seller: V2Seller!
+  promotions: [V2Promotion!]!
+  promotionTag: String
+  reviews: [V2Review!]!
+  links: V2ProductLinks!
+  createdAt: DateTime
+  collectionName: String
+  labelOptions: [V2ProductLabelOption]
+}
+
+input V2ProductSearchFilterInput {
+  id: String!
+  optionIds: [String!]!
+  condition: V2ProductSearchFilterConditionInput!
+}
+
+enum V2ProductSearchFilterConditionInput {
+  EQ
+  IN
+  GTE
+  LTE
+}
+
+input V2ProductSearchSortInput {
+  id: String!
+  direction: V2Direction!
+}
+
+input V2ProductSearchInput {
+  page: Int!
+  limit: Int!
+  filters: [V2ProductSearchFilterInput]!
+  sort: V2ProductSearchSortInput
+  keyword: String
+}
+
+input V2ProductRecommendInput {
+  customerId: String
+  isViewBased: Boolean
+  filters: [V2ProductSearchFilterInput]
+  sort: V2ProductSearchSortInput
+  page: Int
+  limit: Int
+}
+
+input V2ProductSimilarInput {
+  sku: String!
+  page: Int
+  limit: Int
+}
+
+input V2ProductAssociationInput {
+  sku: String!
+  page: Int
+  limit: Int
+}
+
+interface V2ProductSearchFilterResult {
+  id: String!
+  label: String!
+}
+
+type V2ProductSearchFilterNormalResult implements V2ProductSearchFilterResult {
+  id: String!
+  label: String!
+  options: [V2ProductSearchFilterNormalResultOption!]!
+}
+
+type V2ProductSearchFilterRangeResult implements V2ProductSearchFilterResult {
+  id: String!
+  label: String!
+  options: [V2ProductSearchFilterRangeResultOption!]!
+}
+
+type V2ProductSearchFilterCategoryResult implements V2ProductSearchFilterResult {
+  id: String!
+  label: String!
+  options(baseCategoryId: String): [V2ProductSearchFilterCategoryResultOption!]!
+}
+
+type V2ProductSearchFilterNormalResultOption {
+  id: String!
+  label: String!
+  productCount: Int!
+}
+
+type V2ProductSearchFilterRangeResultOption {
+  id: String!
+  label: String!
+  value: Float!
+}
+
+type V2ProductSearchFilterCategoryResultOption {
+  id: String!
+  label: String!
+  level: String
+  productCount: Int!
+  urlPath: String
+  children: [V2ProductSearchFilterCategoryResultOption!]!
+}
+
+type V2ProductSearchSortResult {
+  id: String!
+  label: String!
+  direction: V2Direction!
+}
+
+union V2ProductSearchFilterResultUnion =
+    V2ProductSearchFilterNormalResult
+  | V2ProductSearchFilterRangeResult
+  | V2ProductSearchFilterCategoryResult
+
+type V2ProductSearchResult {
+  totalCount: Int!
+  filters: [V2ProductSearchFilterResultUnion!]
+  products: [V2Product!]!
+  sorts: [V2ProductSearchSortResult!]!
+}
+
+type V2ProductSimilarResult {
+  totalCount: Int!
+  products: [V2Product!]!
+}
+
+type V2ProductAssociationResult {
+  totalCount: Int!
+  products: [V2Product!]!
+}
+
+type V2ProductRecommendResult {
+  totalCount: Int!
+  filters: [V2ProductSearchFilterResultUnion!]
+  products: [V2Product!]!
+  sorts: [V2ProductSearchSortResult!]!
+}
+
+extend type Query {
+  v2ProductSearch(input: V2ProductSearchInput!): V2ProductSearchResult!
+  v2ProductByUrlKey(urlKey: String!): V2Product!
+  v2ProductBySKU(sku: String!): V2Product!
+  v2ProductById(id: String!): V2Product!
+
+  v2InventoryStockBySkus(skus: [String!]!): [V2InventoryStock!]
+  v2ProductRecommendationByUser(input: V2ProductRecommendInput): V2ProductRecommendResult
+  v2ProductSimilarBySKU(input: V2ProductSimilarInput!): V2ProductSimilarResult
+  v2ProductAssociationBySKU(input: V2ProductAssociationInput!): V2ProductAssociationResult
+}

@@ -1,0 +1,116 @@
+type CouponRule {
+  rule: CouponRuleData
+  current_coupon: String
+  remaining_count: Int
+  coupon_expiration_date: String
+  time_used: Int
+}
+
+type CouponRuleData {
+  rule_id: ID!
+  name: String!
+  store_labels: [String]
+  description: String
+  website_ids: [Int]
+  customer_group_ids: [Int]
+  from_date: String
+  to_date: String
+  uses_per_customer: Int
+  is_active: Boolean
+  condition: CouponRuleCondition
+  action_condition: CouponRuleActionCondition
+  stop_rules_processing: Boolean
+  is_advanced: Boolean
+  sort_order: Int
+  simple_action: String
+  discount_amount: Int
+  discount_step: Int
+  apply_to_shipping: Boolean
+  times_used: Int
+  is_rss: Boolean
+  coupon_type: String
+  use_auto_generation: Boolean
+  uses_per_coupon: Int
+  extension_attributes: CouponRuleExtendsionAttributes
+  promotion_mdid: Int
+}
+
+type CouponRuleExtendsionAttributes {
+  term_and_condition: String
+  coupon_image: String 
+  reward_points_delta: Int
+  ampromo_rule: AmPromotionRule
+  amrules: AmRule
+  t1c_special_rate: T1cSpecialRate
+  central_salesrulemaxdiscount_rule: CentralSaleRuleMaxDiscountRule
+  discount_code: String
+  promotion_mdid: String
+}
+
+type AmPromotionRule {
+  sku: String
+  type: Int
+  after_product_banner_show_gift_images: Int
+  top_banner_show_gift_images: Int
+  minimal_items_price: Int
+  apply_tax: Int
+  apply_shipping: Int
+}
+
+type AmRule {
+  promo_cats: String
+  promo_skus: String
+  apply_discount_to: String
+  eachm: String
+  priceselector: Int
+  nqty: String
+  max_discount: String
+  skip_rule: String
+}
+
+type T1cSpecialRate {
+  entity_id: Int
+  salesrule_id: Int
+  redemption_rate: Int
+  maximum_point_rate: Int
+}
+
+type CentralSaleRuleMaxDiscountRule {
+  entity_id: Int
+  rule_id: Int
+  max_discount_amount: Int
+}
+
+type CouponRuleActionCondition {
+  condition_type: String
+  aggregator_type: String
+  operator: String
+  value: String
+}
+
+type CouponRuleCondition {
+  condition_type: String
+  conditions: [CouponRuleConditionData]
+  aggregator_type: String
+  operator: String
+  value: String
+}
+
+type CouponRuleConditionData {
+  condition_type: String
+  operator: String
+  attribute_name: String
+  value: String
+}
+
+type CouponResponse {
+  rules: [CouponRule]
+  current_page: Int!
+  total_page: Int!
+  total_count: Int!
+}
+
+type AssignCouponResponse {
+  success: Boolean!
+  errors: [String]
+}

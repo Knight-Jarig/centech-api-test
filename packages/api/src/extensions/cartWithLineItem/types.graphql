@@ -1,0 +1,36 @@
+extend type CartItemExtensionAttributes {
+  line_items: [CartLineItems]
+  quote_item_group: String!
+  allocated_store_id: Int!
+}
+
+type CartLineItems {
+  entity_id: ID!
+  quote_id: Int!
+  line_id: Int!
+  line_number: Int!
+  extension_attributes: CartLineItemExtensionAttribute
+}
+
+type CartLineItemExtensionAttribute {
+  estimated_lead_times: [JSON]
+  lead_time: JSON
+  shipping_information: JSON
+}
+
+enum QuoteItemGroup {
+  standard
+  storepickup
+}
+
+# TODO: get default `allocated_store_id` from mdc
+extend input AddToCartExtension {
+  allocated_store_id: Int = 6 # default id is 6 Bangna in TWD
+  quote_item_group: QuoteItemGroup!
+}
+
+# TODO: refactor this to be shared with AddToCartExtension
+extend input EditCartItemExtensionAttribute {
+  allocated_store_id: Int!
+  quote_item_group: QuoteItemGroup!
+}

@@ -1,0 +1,118 @@
+type V2WishlistGroupItem {
+  id: ID!
+  wishlistId: Int!
+  storeId: Int
+  addedAt: String
+  description: String
+  quantity: Int
+  product: V2Product
+  productId: String
+  parent: V2Product
+  productOptions: [V2CustomAttributes]
+}
+
+type V2CustomAttributes {
+  attributeCode: String
+  value: String
+  name: String
+}
+
+type V2ResponseStatus {
+  status: Boolean
+}
+
+input V2WishlistItemFilterInput {
+  limit: Int
+  page: Int
+}
+
+type V2WishlistGroup {
+  id: ID!
+  customerId: Int!
+  name: String
+  sharingCode: String
+  updatedAt: String
+  visibility: Int
+  shared: Int
+  items(input: V2WishlistItemFilterInput): V2WishlistGroupListItem
+}
+
+type V2WishlistGroupListItem {
+  data: [V2WishlistGroupItem]
+  totalCount: Int
+}
+
+type V2Wishlist {
+  groups: [V2WishlistGroup]
+  totalCount: Int!
+}
+
+input V2WishlistFilterInput {
+  id: String!
+  optionIds: [String!]!
+  condition: V2WishlistFilterInputCondition!
+}
+
+enum V2WishlistFilterInputCondition {
+  EQ
+  GT
+  GTE
+  LT
+  LTE
+  IN
+  LIKE
+  FINSET
+  FROM
+  MOREQ
+  NEQ
+  NIN
+  NOTNULL
+  NULL
+}
+
+input V2WishlistSortInput {
+  id: String!
+  direction: V2Direction!
+}
+
+input V2WishlistInput {
+  page: Int
+  limit: Int
+  filters: [V2WishlistFilterInput]
+  sorts: [V2WishlistSortInput!]
+}
+
+input V2CreateWishListInput {
+  id: ID!
+  productId: ID!
+  storeId: Int
+  customAttributes: [V2WishlistItemProductOptionInput]
+  quantity: String
+  description: String
+}
+
+input V2MoveToWishListInput {
+  id: ID!
+  productId: ID!
+  storeId: Int
+  customAttributes: [V2WishlistItemProductOptionInput]
+  quantity: String
+  description: String
+  itemId: String!
+}
+
+input V2WishlistItemProductOptionInput {
+  value: String
+  attributeCode: String
+  name: String
+}
+
+extend type Query {
+  v2Wishlists(input: V2WishlistInput): V2Wishlist
+}
+
+extend type Mutation {
+  v2CreateWishListItem(input: V2CreateWishListInput): V2WishlistGroupItem
+  v2DeleteWishListItem(id: Int!): V2ResponseStatus
+  v2MoveItemToWishListItem(input: V2MoveToWishListInput): V2ResponseStatus
+}

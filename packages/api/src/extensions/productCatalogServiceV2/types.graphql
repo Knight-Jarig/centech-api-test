@@ -1,0 +1,6 @@
+extend type Query {
+  search(store: String!, locale: String!, keyword: String, sort: JSON, pagination: JSON, filter: JSON): JSON
+  productRecommendationByUser(customerId: String, limit: Int): JSON
+  productAssociationBySku(sku: String, limit: Int): JSON
+  productById(id: String!): Product
+}

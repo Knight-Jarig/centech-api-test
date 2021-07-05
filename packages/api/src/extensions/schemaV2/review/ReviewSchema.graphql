@@ -1,0 +1,24 @@
+input V2ReviewProvinceInput {
+  id: String
+}
+
+input V2RatingOptionInput {
+  optionId: Int
+  ratingId: Int
+}
+
+input V2ReviewInput {
+  name: String!
+  email: String
+  customerId: String
+  province: V2ReviewProvinceInput
+  title: String!
+  detail: String
+  ratingOption: V2RatingOptionInput!
+  sku: String!
+  imageUrls: [String!]
+}
+
+extend type Mutation {
+  v2AddReview(input: V2ReviewInput): ResponseMessage!
+}

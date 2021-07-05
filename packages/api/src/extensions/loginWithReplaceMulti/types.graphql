@@ -1,0 +1,18 @@
+enum SocialLoginInputProvider {
+  facebook
+}
+
+input SocialLoginInput {
+  provider: SocialLoginInputProvider!
+  token: String!
+  is_jwt: Boolean!
+  guest_token: String
+  isReplaceCart: Boolean
+}
+extend input LoginInput {
+  guest_token: String
+}
+
+extend type Mutation {
+  socialLogin(input: SocialLoginInput!): LoginResponse
+}

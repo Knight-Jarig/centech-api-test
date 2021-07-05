@@ -1,0 +1,902 @@
+type Aggregation {
+  field: String
+  value: String
+  buckets: [Bucket]
+  position: Int
+  label: String
+}
+
+type Bank {
+  color: String
+  bank_id: String
+  bank_image: String
+  name: String
+  icon: String
+  active: String
+  create: String
+  update: String
+}
+
+type Brand {
+  brand_id: Int
+  attribute_id: Int
+  attribute_code: String
+  option_id: Int
+  name: String
+  website_ids: [Int]
+  url_key: String
+  logo: String
+  is_featured: Boolean
+  content: [BrandContent]
+  meta_title: String
+  description: String
+  brand_additional_products: [BrandAdditionalProduct]
+  extension_attributes: BrandDetailExtensionAttributess
+}
+
+type BrandAdditionalProduct {
+  product_id: Int
+  position: Int
+}
+
+type BrandById {
+  brand: Brand
+}
+
+type BrandContent {
+  only_central: Int
+  brand_id: Int
+  store_id: Int
+  meta_title: String
+  meta_description: String
+  description: String
+}
+
+type BrandDetailExtensionAttributess {
+  parent_category: Int
+  menu_css: String
+  content_css: String
+  brand_image_url: String
+  position: Int
+  product_collections: [String]
+  product_count: Int
+  product_name_special: Boolean
+  hide_product_original_price: Boolean
+  hide_t1c_redeemable_amount: Boolean
+  allow_product_review: Boolean
+}
+
+type Brands {
+  brands: [Brand]
+}
+
+type Breadcrumb {
+  category_id: String
+  name: String
+  level: String
+  url: String
+}
+
+type Bucket {
+  key: String
+  doc_count: Int
+}
+
+type Categories {
+  categories: [CategoryFull]
+}
+
+type Category {
+  id: String
+  name: String
+  parent_id: String
+  url_path: String
+  is_gtm: Boolean
+}
+
+type CategoryAggregation {
+  id: String
+  name: String
+  parent_id: String
+  url_path: String
+  is_gtm: Boolean
+  available_sort_by: String
+  children: String
+  children_count: String
+  created_at: String
+  include_in_menu: String
+  is_active: String
+  level: String
+  locale: String
+  mega_cms_banner: String
+  mega_cms_brand: String
+  mega_cms_menu: String
+  path: String
+  position: String
+  product_count: String
+  updated_at: String
+  url_key: String
+  virtual_category_root: String
+  doc_count: Int
+}
+
+type CategoryFull {
+  id: String
+  name: String
+  parent_id: String
+  url_path: String
+  is_gtm: Boolean
+  available_sort_by: String
+  children: String
+  children_count: String
+  created_at: String
+  include_in_menu: String
+  is_active: String
+  level: String
+  locale: String
+  mega_cms_banner: String
+  mega_cms_brand: String
+  mega_cms_menu: String
+  path: String
+  position: String
+  product_count: String
+  updated_at: String
+  url_key: String
+  virtual_category_root: String
+}
+
+type CategoryPath {
+  category_id: String
+  name: String
+  parent_id: String
+  level: String
+}
+
+input CommonFilter {
+  field: String
+  value: String
+  operator: String
+}
+
+type ConfigurableProduct {
+  id: String
+  sku: String
+  name: String
+  price: Float
+  breadcrumbs: [Breadcrumb]
+  categories: [Category]
+  status: Int
+  visibility: String
+  type_id: String
+  created_at: String
+  configurable_product_links: [String]
+  brand_id: String
+  brand_name: String
+  brand_url: String
+  color_group_name: [String]
+  image: String
+  url_key: String
+  special_price: Float
+  special_from_date: String
+  special_to_date: String
+  is_in_stock: Boolean
+  new_tag: String
+  only_at_tag: String
+  promo_tag: String
+  recommended: String
+  flash_deal: String
+  best_sellers: String
+  discount_amount: Float
+  updated_at: String
+  product_type: String
+  preorder_shipping_date: String
+  max_sale_qty: Int
+  min_sale_qty: Int
+  online_exclusive_tag: String
+  marketplace_product_type_option: String
+  marketplace_seller_option: String
+  flash_deal_enable: String
+  flash_deal_qty: String
+  flash_deal_sold_qty: String
+  flash_deal_from: String
+  flash_deal_to: String
+  is_hide_original_price: Boolean
+  is_show_special_product_name: Boolean
+  overlay: Overlay
+  ranking: Int
+  flash_deal_position: Int
+  recommened_sort_order: Int
+  manual_boosting: Int
+  size: String
+  collection: String
+  car_seat_age: String
+  pm25: String
+  pacifier_size: String
+  watt: String
+  bottle_size: String
+  milk_powder_formula: String
+  milk_powder_type: String
+  diaper_weight: String
+  diaper_size: String
+  age_range: String
+  kid_diaper_type: String
+  cordless: String
+  anti_calc_clean: String
+  app_connected: String
+  inverter_type: String
+  grill_mode: String
+  boil_function: String
+  ro: String
+  wireless: String
+  microphone: String
+  battery_time: String
+  btu: String
+  capacity_lts: String
+  capacity_grams: String
+  digital_manual: String
+  coffee_maker_technology: String
+  filtrations: String
+  battery_type: String
+  luggage_size: String
+  weight_kg: String
+  racket: String
+  necklace_size: String
+  shoe_material: String
+  dress_length: String
+  density: String
+  bracelet_size: String
+  clothing_size: String
+  shoe_size: String
+  gender: String
+  filtration: String
+  material_clothing: String
+  material_general: String
+  sets: String
+  home_clock_type: String
+  descaling_system: String
+  material_dial: String
+  fashion_heel_type: String
+  inverter: String
+  accessory_jewelry_type: String
+  life_luggage_type: String
+  fashion_neckline: String
+  fashion_occasion: String
+  fashion_pant_fit: String
+  pattern: String
+  fashion_shoes_type: String
+  fashion_sleeves_level: String
+  fashion_socks_type: String
+  style_general: String
+  fashion_swimwear_type: String
+  fashion_underwear_type: String
+  waterproof: String
+  allow_cc: String
+  allow_cod: String
+  allow_express: String
+  allow_gift_wrapping: String
+  allow_installment: String
+  allow_return: String
+  amxnotif_hide_alert: String
+  backorders: Int
+  bu: String
+  category_ids: [Int]
+  central_url_generator_flag: String
+  cmpgn: [String]
+  color: String
+  color_shade_id: String
+  color_shade_name: String
+  content_status: String
+  copywrite_status: String
+  CorrelationId: String
+  enable_qty_increments: Boolean
+  gift_message_available: String
+  gift_wrapping_available: String
+  has_options: String
+  installment_plans: [String]
+  is_decimal_divided: Boolean
+  is_jda: String
+  is_limited: String
+  is_migrated: String
+  is_qty_decimal: Boolean
+  is_returnable: String
+  is_sets: String
+  is_travel: String
+  jda_discount_code: String
+  low_stock_date: String
+  meta_description: String
+  meta_keyword: String
+  meta_title: String
+  homepage_new: String
+  manage_stock: Boolean
+  min_qty: Int
+  msrp_display_actual_price_type: String
+  notify_stock_qty: Int
+  online_price_enabled: String
+  options_container: String
+  page_layout: String
+  payment_methods: String
+  photo_status: String
+  product_id: Int
+  product_links: [ProductLink]
+  product_sell_type: String
+  product_status: String
+  qty_increments: Int
+  required_options: String
+  sell_on_jd: String
+  shipping_methods: String
+  show_default_notification_message: Boolean
+  size_type: Boolean
+  small_image: String
+  specification_from_date: String
+  stock_id: Int
+  stock_status_changed_auto: Int
+  store: String
+  store_local: String
+  t1c_earn_points_estimate: [Int]
+  t1c_redeemable_points: [Int]
+  tax_class_id: String
+  thumbnail: String
+  use_config_backorders: Boolean
+  use_config_enable_qty_inc: Boolean
+  use_config_manage_stock: Boolean
+  use_config_max_sale_qty: Boolean
+  use_config_min_qty: Boolean
+  use_config_min_sale_qty: Int
+  use_config_notify_stock_qty: Boolean
+  use_config_qty_increments: Boolean
+  vat: String
+  website_ids: [Int]
+  media_gallery_entries: [MediaGalleryEntry]
+  media_gallery_entries_video: [MediaGalleryEntryVideo]
+  marketplace: Marketplace
+  dimension: Dimension
+  specification_attributes: [EAV]
+  description: String
+  short_description: String
+  extension_attributes_installment_plans: [InstallmentPlan]
+  category_paths: [CategoryPath]
+  overall_rating: Rating
+  reviews: [Review]
+  brand: Brand
+  suggest_promotions: [SuggestPromotion]
+  shipping_delivery_methods: [ShippingDeliveryMethod]
+  online_salable: Boolean
+  offline_salable: Boolean
+}
+
+type ConfigurableProductOption {
+  attribute_id: String
+  id: Int
+  label: String
+  values: [ConfigurableProductOptionValue]
+  position: Int
+}
+
+type ConfigurableProductOptionValue {
+  extension_attributes: ConfigurableProductOptionValueExtensionAttribute
+  value_index: Int
+}
+
+type ConfigurableProductOptionValueExtensionAttribute {
+  frontend_type: String
+  frontend_value: String
+  label: String
+  products: [String]
+}
+
+type Dimension {
+  width: Float
+  height: Float
+  depth: Float
+}
+
+input DynamicSort {
+  field: String
+  order: String
+  optional: String
+}
+
+type EAV {
+  attribute_code: String
+  label: String
+  value: String
+}
+
+input ExactFilter {
+  filterBy: ExactFilterOption
+  filterValue: String
+}
+
+enum ExactFilterOption {
+  IS_IN_STOCK
+  RECOMMENDED
+  FLASH_DEAL
+  BEST_SELLERS
+  NEW_ARRIVALS
+  PM2_5
+}
+
+input Filter {
+  exactFilters: [ExactFilter]
+  inFilters: [InFilter]
+  rangeFilters: [RangeFilter]
+}
+
+type FindBySku {
+  product: Product
+}
+
+type FindByUrlKey {
+  product: Product
+}
+
+input InFilter {
+  filterBy: InFilterOption
+  filterValues: [String]
+}
+
+enum InFilterOption {
+  ID
+  SKU
+  CATEGORY
+  STATUS
+  VISIBILITY
+  TYPE_ID
+  RATING
+  BRAND_NAME
+  COLOR_GROUP_NAME
+  CONFIGURABLE_PRODUCT_LINKS
+  SIZE
+  ROOM_SIZE_SQM
+  CAR_SEAT_AGE
+  PM25
+  PACIFIER_SIZE
+  WATT
+  BOTTLE_SIZE
+  MILK_POWDER_FORMULA
+  MILK_POWDER_TYPE
+  DIAPER_WEIGHT
+  DIAPER_SIZE
+  AGE_RANGE
+  KID_DIAPER_TYPE
+  CORDLESS
+  ANTI_CALC_CLEAN
+  APP_CONNECTED
+  INVERTER_TYPE
+  GRILL_MODE
+  BOIL_FUNCTION
+  RO
+  WIRELESS
+  MICROPHONE
+  BATTERY_TIME
+  BTU
+  CAPACITY_LTS
+  CAPACITY_GRAMS
+  DIGITAL_MANUAL
+  COFFEE_MAKER_TECHNOLOGY
+  FILTRATIONS
+  BATTERY_TYPE
+  LUGGAGE_SIZE
+  WEIGHT_KG
+  RACKET
+  NECKLACE_SIZE
+  SHOE_MATERIAL
+  DRESS_LENGTH
+  DENSITY
+  BRACELET_SIZE
+  CLOTHING_SIZE
+  SHOE_SIZE
+  GENDER
+  FILTRATION
+  MATERIAL_CLOTHING
+  MATERIAL_GENERAL
+  SETS
+  HOME_CLOCK_TYPE
+  DESCALING_SYSTEM
+  MATERIAL_DIAL
+  FASHION_HEEL_TYPE
+  INVERTER
+  ACCESSORY_JEWELRY_TYPE
+  LIFE_LUGGAGE_TYPE
+  FASHION_NECKLINE
+  FASHION_OCCASION
+  FASHION_PANT_FIT
+  PATTERN
+  FASHION_SHOES_TYPE
+  FASHION_SLEEVES_LEVEL
+  FASHION_SOCKS_TYPE
+  STYLE_GENERAL
+  FASHION_SWIMWEAR_TYPE
+  FASHION_UNDERWEAR_TYPE
+  WATERPROOF
+  SHIPPING_DELIVERY_METHODS_DELIVERY_METHOD
+}
+
+type InstallmentPlan {
+  period: String
+  bank: Bank
+  interest_type: String
+  min_amount: String
+  valid_from: String
+  active: String
+  update: String
+  valid_until: String
+  bank_id: String
+  name: String
+  customer_rate: String
+  installmentplan_id: String
+  max_amount: String
+  create: String
+  currency: String
+  merchant_rate: String
+}
+
+type Marketplace {
+  seller: String
+  product_type: String
+  offer_id: String
+}
+
+type MediaGalleryEntry {
+  id: String
+  types: [String]
+  file: String
+  media_type: String
+  disabled: Boolean
+  label: Boolean
+  position: String
+}
+
+type MediaGalleryEntryVideo {
+  id: String
+  store_id: String
+  provider: String
+  url: String
+  title: String
+  description: String
+  metadata: String
+}
+
+type Overlay {
+  status: String
+  mobile_status: String
+  start_date: String
+  end_date: String
+  image: String
+}
+
+input Pagination {
+  size: Int
+  offset: Int
+}
+
+type Product {
+  id: String
+  sku: String
+  name: String
+  price: Float
+  breadcrumbs: [Breadcrumb]
+  categories: [Category]
+  status: Int
+  visibility: String
+  type_id: String
+  created_at: String
+  configurable_product_links: [String]
+  configurable_products: [ConfigurableProduct]
+  configurable_product_options: [ConfigurableProductOption]
+  brand_id: String
+  brand_name: String
+  brand_url: String
+  color_group_name: [String]
+  image: String
+  url_key: String
+  special_price: Float
+  special_from_date: String
+  special_to_date: String
+  is_in_stock: Boolean
+  new_tag: String
+  only_at_tag: String
+  promo_tag: String
+  recommended: String
+  flash_deal: String
+  best_sellers: String
+  discount_amount: Float
+  updated_at: String
+  product_type: String
+  preorder_shipping_date: String
+  max_sale_qty: Int
+  min_sale_qty: Int
+  online_exclusive_tag: String
+  marketplace_product_type_option: String
+  marketplace_seller_option: String
+  flash_deal_enable: String
+  flash_deal_qty: String
+  flash_deal_sold_qty: String
+  flash_deal_from: String
+  flash_deal_to: String
+  is_hide_original_price: Boolean
+  is_show_special_product_name: Boolean
+  overlay: Overlay
+  ranking: Int
+  flash_deal_position: Int
+  recommened_sort_order: Int
+  manual_boosting: Int
+  size: String
+  collection: String
+  car_seat_age: String
+  pm25: String
+  pacifier_size: String
+  watt: String
+  bottle_size: String
+  milk_powder_formula: String
+  milk_powder_type: String
+  diaper_weight: String
+  diaper_size: String
+  age_range: String
+  kid_diaper_type: String
+  cordless: String
+  anti_calc_clean: String
+  app_connected: String
+  inverter_type: String
+  grill_mode: String
+  boil_function: String
+  ro: String
+  wireless: String
+  microphone: String
+  battery_time: String
+  btu: String
+  capacity_lts: String
+  capacity_grams: String
+  digital_manual: String
+  coffee_maker_technology: String
+  filtrations: String
+  battery_type: String
+  luggage_size: String
+  weight_kg: String
+  racket: String
+  necklace_size: String
+  shoe_material: String
+  dress_length: String
+  density: String
+  bracelet_size: String
+  clothing_size: String
+  shoe_size: String
+  gender: String
+  filtration: String
+  material_clothing: String
+  material_general: String
+  sets: String
+  home_clock_type: String
+  descaling_system: String
+  material_dial: String
+  fashion_heel_type: String
+  inverter: String
+  accessory_jewelry_type: String
+  life_luggage_type: String
+  fashion_neckline: String
+  fashion_occasion: String
+  fashion_pant_fit: String
+  pattern: String
+  fashion_shoes_type: String
+  fashion_sleeves_level: String
+  fashion_socks_type: String
+  style_general: String
+  fashion_swimwear_type: String
+  fashion_underwear_type: String
+  waterproof: String
+  allow_cc: String
+  allow_cod: String
+  allow_express: String
+  allow_gift_wrapping: String
+  allow_installment: String
+  allow_return: String
+  amxnotif_hide_alert: String
+  backorders: Int
+  bu: String
+  category_ids: [Int]
+  central_url_generator_flag: String
+  cmpgn: [String]
+  color: String
+  color_shade_id: String
+  color_shade_name: String
+  content_status: String
+  copywrite_status: String
+  CorrelationId: String
+  enable_qty_increments: Boolean
+  gift_message_available: String
+  gift_wrapping_available: String
+  has_options: String
+  installment_plans: [String]
+  is_decimal_divided: Boolean
+  is_jda: String
+  is_limited: String
+  is_migrated: String
+  is_qty_decimal: Boolean
+  is_returnable: String
+  is_sets: String
+  is_travel: String
+  jda_discount_code: String
+  low_stock_date: String
+  meta_description: String
+  meta_keyword: String
+  meta_title: String
+  homepage_new: String
+  manage_stock: Boolean
+  min_qty: Int
+  msrp_display_actual_price_type: String
+  notify_stock_qty: Int
+  online_price_enabled: String
+  options_container: String
+  page_layout: String
+  payment_methods: String
+  photo_status: String
+  product_id: Int
+  product_links: [ProductLink]
+  product_sell_type: String
+  product_status: String
+  qty_increments: Int
+  required_options: String
+  sell_on_jd: String
+  shipping_methods: String
+  show_default_notification_message: Boolean
+  size_type: Boolean
+  small_image: String
+  specification_from_date: String
+  stock_id: Int
+  stock_status_changed_auto: Int
+  store: String
+  store_local: String
+  t1c_earn_points_estimate: [Int]
+  t1c_redeemable_points: [Int]
+  tax_class_id: String
+  thumbnail: String
+  use_config_backorders: Boolean
+  use_config_enable_qty_inc: Boolean
+  use_config_manage_stock: Boolean
+  use_config_max_sale_qty: Boolean
+  use_config_min_qty: Boolean
+  use_config_min_sale_qty: Int
+  use_config_notify_stock_qty: Boolean
+  use_config_qty_increments: Boolean
+  vat: String
+  website_ids: [Int]
+  media_gallery_entries: [MediaGalleryEntry]
+  media_gallery_entries_video: [MediaGalleryEntryVideo]
+  marketplace: Marketplace
+  dimension: Dimension
+  specification_attributes: [EAV]
+  description: String
+  short_description: String
+  extension_attributes_installment_plans: [InstallmentPlan]
+  category_paths: [CategoryPath]
+  overall_rating: Rating
+  reviews: [Review]
+  brand: Brand
+  suggest_promotions: [SuggestPromotion]
+  shipping_delivery_methods: [ShippingDeliveryMethod]
+  online_salable: Boolean
+  offline_salable: Boolean
+}
+
+type ProductLink {
+  link_type: String
+  linked_product_sku: String
+  linked_product_type: String
+  position: String
+  sku: String
+}
+
+type Query {
+  search(
+    store: String!
+    locale: String!
+    keyword: String
+    sort: Sort
+    sort_orders: DynamicSort
+    pagination: Pagination
+    filter: Filter
+    filter_groups: [CommonFilter]
+  ): Search
+  findBySku(store: String!, locale: String!, sku: String!): FindBySku
+  suggestSearch(store: String!, locale: String!, keyword: String!, product_size: Int, category_size: Int): SuggestSearch
+  categories(locale: String!): Categories
+  brands(locale: String!): Brands
+  brandById(locale: String!, id: String!): BrandById
+  findByUrlKey(locale: String!, url_key: String!): FindByUrlKey
+}
+
+input RangeFilter {
+  filterBy: RangeFilterOption
+  minValue: String
+  maxValue: String
+}
+
+enum RangeFilterOption {
+  PRICE
+}
+
+type Rating {
+  rating_id: Int
+  rating: Float
+  category: String
+  option_id: Int
+  total_vote: Int
+  five_star: Int
+  four_star: Int
+  three_star: Int
+  two_star: Int
+  one_star: Int
+  rounded_rating: Float
+}
+
+type Review {
+  review_id: Int
+  nickname: String
+  rating_items: [Rating]
+  created_at: String
+  title: String
+  detail: String
+  is_validate: Boolean
+  region_id: Int
+  extension_attributes: ReviewExtension
+}
+
+type ReviewExtension {
+  email: String
+  images: [String]
+}
+
+type Search {
+  total: Int
+  products: [Product]
+  aggregations: [Aggregation]
+  category_aggregations: [CategoryAggregation]
+}
+
+type ShippingDeliveryMethod {
+  shipping_method: String
+  delivery_method: String
+  shipping_method_code: String
+  delivery_method_code: String
+}
+
+input Sort {
+  sortBy: SortOption
+  order: SortOrder
+  skus: [String]
+}
+
+enum SortOption {
+  NAME
+  PRICE
+  NEW_ARRIVALS
+  ID
+  DISCOUNT_AMOUNT
+  RECOMMENDED
+  RECOMMENED_SORT_ORDER
+  RANKING
+  FLASH_DEAL_POSITION
+  MANUAL_SORT_BY_SKU
+  MANUAL_BOOSTING
+  RATING
+  REVIEWCOUNT
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+type SuggestPromotion {
+  promotion_name: String
+  full_condition: String
+  start_datetime: String
+  end_datetime: String
+  label: String
+  short_description: String
+}
+
+type SuggestSearch {
+  products: [Product]
+  categories: [Category]
+}

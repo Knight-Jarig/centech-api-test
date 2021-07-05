@@ -1,0 +1,25 @@
+type CouponCampaignResponse {
+  rule: CouponRuleData!
+  remaining_count: Int!
+  coupon_image: String!
+}
+
+type AssignCouponCampaignResponse {
+  success: Boolean!
+  errors: [String]
+}
+
+input AssignCouponCampaignInput {
+  campaignName: String!
+  email: String!
+  phone: String!
+  ruleId: String!
+}
+
+extend type Query {
+  couponCampaignList(campaignName: String!): [CouponCampaignResponse]
+}
+
+extend type Mutation {
+  assignCouponCampaign(input: AssignCouponCampaignInput!): AssignCouponCampaignResponse
+}

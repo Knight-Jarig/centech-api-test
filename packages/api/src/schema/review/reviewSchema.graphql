@@ -1,0 +1,69 @@
+type ReviewResponse {
+  success: String
+}
+
+input InputImagePath {
+  path: String!
+}
+
+input RatingItem {
+  rating_id: Int!
+  rating: Int!
+  option_id: Int!
+}
+
+input ReviewInput {
+  nickname: String
+  title: String
+  detail: String
+  rating_items: RatingItem!
+  sku: String!
+  email: String
+  region_id: Int
+  customer_id: String
+  images: [InputImagePath!]
+}
+
+input Base64Image {
+  image: String
+  image_type: String
+}
+
+input UploadImageInput {
+  base64Image: [Base64Image]
+  # TODO: add type file
+}
+
+type UploadImageResponse {
+  error: Boolean
+  items: [UploadImageResponseItem]
+}
+
+type UploadImageResponseItem {
+  error: Boolean
+  message: String
+  path: String
+}
+
+type RatingOptions {
+  option_id: Int
+  rating_id: Int
+  code: Int
+  value: Int
+  position: Int
+  rating_code: String
+}
+
+input DeleteImageInput {
+  path: String!
+}
+
+extend type Query {
+  ratingOptions: [RatingOptions]
+}
+
+extend type Mutation {
+  addReview(storeCode: String, input: ReviewInput!): ReviewResponse
+  uploadReviewImage(input: UploadImageInput!): UploadImageResponse
+  deleteReviewImage(input: DeleteImageInput!): Boolean
+}

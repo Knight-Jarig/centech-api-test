@@ -1,0 +1,114 @@
+type PickUpStoreMulti {
+  sku: String
+  data: [PickUpStore]
+}
+
+type PickUpStore {
+  source_item: PickUpStoreSourceItem
+  store: Store
+}
+
+type PickUpStoreSourceItem {
+  sku: String
+  source_code: String
+  quantity: Int
+  status: Int
+}
+
+type IsSalable {
+  status: Boolean
+}
+
+type PickupStoreLocation {
+  id: ID!
+  name: String
+  storeCode: String
+  isActive: Boolean
+  address: PickupStoreLocationAddress
+  openingHours: [PickupStoreLocationOpeningHour]
+  image: String
+  allowPickAtStore: Boolean
+  isDisplayAsStoreInformation: Boolean
+  salableItems: [PickupStoreLocationSalableItem]
+  storePickup: PickupStoreLocationStorePickup
+  additionalText: PickupStoreLocationAdditionalText
+  cutOffTime: String
+}
+
+type PickupStoreLocationAddress {
+  streetNumber: String
+  building: String
+  soi: String
+  street: String
+  district: String
+  districtId: Int
+  subDistrict: String
+  subDistrictId: Int
+  region: String
+  regionId: Int
+  postcode: String
+  contactNumber: String
+  countryCode: String
+  city: String
+  latitude: String
+  longitude: String
+}
+
+type PickupStoreLocationOpeningHour {
+  day: String
+  openTime: String
+  closeTime: String
+}
+
+type PickupStoreLocationSalableItem {
+  sku: String
+  qty: Int
+}
+
+type PickupStoreLocationStorePickup {
+  stockId: Int
+  allowIspu: Boolean
+  allowSts: Boolean
+}
+
+type PickupStoreLocationAdditionalText {
+  methodCode: String
+  methodLabelCode: String
+  timeValue: Int
+  timeUnit: String
+  datetime: String
+  totalAvailable: Int
+  totalOrdered: Int
+}
+
+type ShipFromStoreAvailableTime {
+  available_from: String
+  available_to: String
+}
+
+extend type Query {
+  """
+  [PWB] - Query available store for 2hr pick up shipping method
+  """
+  get2hrsPickUpStores(sku: String): [PickUpStore]
+  """
+  [PWB] - Query all active store for 2hr pick up shipping method
+  """
+  getAllActive2hrsPickUpStores(sku: String): [PickUpStore]
+  """
+  [PWB] - Query available store with multiple sku for 2hr pick up shipping method
+  """
+  getMulti2hrsPickUpStores(skus: [String]): [PickUpStoreMulti]
+  """
+  [PWB] - Query available store for click and collect shipping method
+  """
+  getClickNCollectPickUpStores(cartId: String): [Store]
+  """
+  [PWB] - Query check active status store
+  """
+  getStatusActivePickupStore(sku: String): IsSalable
+  """
+  [PWB] - Query get available time of ship from store (3hr) shipping method
+  """
+  getShipFromStoreAvailableTime: ShipFromStoreAvailableTime
+}

@@ -1,0 +1,135 @@
+type V2OrderPaymentThe1Redemption {
+  point: Float!
+  discount: Float!
+}
+
+type V2CouponCode {
+  id: String!
+  code: String!
+  amount: Float!
+}
+
+type V2OrderPayment {
+  methodLabel: String
+  methodCode: String
+  subtotal: Float!
+  grandTotal: Float!
+  discount: Float
+  the1Redemption: V2OrderPaymentThe1Redemption
+  creditCardOnTop: Float
+  hasGiftWrap: Boolean!
+  giftWrapping: Float
+  otherDiscount: Float
+  couponCodes: [V2CouponCode]
+  shippingCost: Float
+}
+
+type V2OrderAddress {
+  id: ID
+  customerId: ID
+  firstName: String!
+  lastName: String!
+  telephone: String!
+  postcode: String!
+  countryId: ID!
+  company: String
+  vatId: ID
+  isDefaultShipping: Boolean
+  isDefaultBilling: Boolean
+
+  subDistrict: V2Place
+  district: V2Place
+  province: V2Province
+  customerAddressType: String!
+  isFullTaxRequest: Boolean
+
+  addressLine: String
+  addressName: String
+  building: String
+  branchId: String
+  fullTaxType: V2TaxType
+}
+
+type V2OrderShipping {
+  description: String
+  methodLabel: String!
+  methodCode: String!
+  shippingAddress: V2OrderAddress!
+  billingAddress: V2OrderAddress
+}
+
+type V2OrderItemOptions {
+  attributeCode: String
+  value: String
+}
+
+type V2OrderItem {
+  sku: String
+  name: String
+  itemId: String
+  thumbnailUrl: String
+  brandName: String
+  options: [V2OrderItemOptions!]
+  quantity: Int
+  price: Float
+  status: String
+  marketplaceType: String
+}
+
+type V2OrderPackages {
+  status: String
+  trackNumber: String
+  trackURL: String
+  shipmentProvider: String
+  refNumber: String
+  items: [V2OrderItem]
+  isMarketplaceInfo: Boolean
+}
+
+type V2OrderOtherCanceledItem {
+  status: String
+  items: [V2OrderItem]
+}
+
+type V2OrderItemGroupBySeller {
+  sellerName: String
+  packages: [V2OrderPackages]
+  otherItem: V2OrderOtherCanceledItem
+  canceledItem: V2OrderOtherCanceledItem
+}
+
+type V2Order {
+  customerFirstName: String
+  customerLastName: String
+  customerEmail: String
+  pickupCode: String
+  createdAt: DateTime
+  incrementId: String!
+  orderStatus: String
+  deliveryStatus: String
+  payment: V2OrderPayment
+  shipping: V2OrderShipping
+  itemsGroupBySeller: [V2OrderItemGroupBySeller]
+}
+
+type V2OrderResult {
+  orders: [V2Order]
+  totalCount: Int
+}
+
+input V2OrderFilterQueryInput {
+  page: Int
+  limit: Int
+  filters: [V2FilterInput]
+  sorts: [V2SortInput!]
+}
+
+input V2OrderInput {
+  incrementId: String!
+  email: String
+}
+
+extend type Query {
+  v2Orders(input: V2OrderFilterQueryInput!): V2OrderResult!
+  v2Order(input: V2OrderInput!): V2Order
+}

@@ -1,0 +1,54 @@
+type banner {
+  id: ID!
+  name: String!
+  status: String
+  sort_order: String
+  page_type: String
+  position: String
+  product_condition: String
+  category_ids: String
+  animation_effect: Int
+  pause_time_between_transitions: Int
+  slide_transition_speed: Int
+  is_stop_animation_mouse_on_banner: Boolean
+  display_arrows: Boolean
+  display_bullets: Boolean
+  is_random_order_image: Boolean
+  slide_ids: [Int]
+  slide_position: String
+  extension_attributes: extensionAttributes
+}
+
+type extensionAttributes {
+  image_dir: String
+  slides: [slides]
+}
+
+type slides {
+  id: Int
+  status: Int
+  name: String
+  store_ids: [Int]
+  customer_group_ids: [Int]
+  display_from: String
+  display_to: String
+  img_type: String
+  img_file: String
+  img_url: String
+  img_title: String
+  img_alt: String
+  url: String
+  is_open_url_in_new_window: Boolean
+  is_add_nofollow_to_url: Boolean
+  banner_ids: [Int]
+  extension_attributes: subExtensionAttributes
+}
+
+type subExtensionAttributes {
+  cms_content: String
+  cms_position: String
+}
+
+extend type Query {
+  banner(input: FiltersQuery): [banner]
+}

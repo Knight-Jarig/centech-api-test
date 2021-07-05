@@ -1,0 +1,29 @@
+overwrite: true
+#schema: "http://localhost:4000/graphql"
+schema:
+  - "./src/schema/**/*.graphql"
+  - "./src/extensions/**/*.graphql"
+documents: null
+
+generates:
+  src/types/graphql.ts:
+    config:
+      scalars:
+        DateTime: "DateTime"
+      typesPrefix: I
+      nonOptionalTypename: false
+      contextType: "./index#ResolverContext"
+      useIndexSignature: true
+      declarationKind:
+        type: 'interface'
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+      - add: |
+          import { DateTime } from 'luxon';
+  graphql.schema.json:
+    plugins:
+      - "introspection"
+  schema.graphql:
+    plugins:
+      - schema-ast

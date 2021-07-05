@@ -1,0 +1,135 @@
+enum V2AddressType {
+  SHIPPING
+  BILLING
+}
+
+enum V2TaxType {
+  PERSONAL
+  COMPANY
+}
+
+type V2Place {
+  id: String
+  name: String
+}
+
+type V2Province {
+  id: String
+  code: String
+  name: String
+}
+
+interface V2Address {
+  id: ID!
+  customerId: ID
+  firstName: String!
+  lastName: String!
+  telephone: String!
+  postcode: String!
+  countryId: ID!
+  company: String
+  vatId: ID
+  isDefaultShipping: Boolean
+  isDefaultBilling: Boolean
+
+  subDistrict: V2Place!
+  district: V2Place!
+  province: V2Province
+  customerAddressType: String!
+  isFullTaxRequest: Boolean
+}
+
+type V2AddressCDS implements V2Address {
+  id: ID!
+  customerId: ID
+  firstName: String!
+  lastName: String!
+  telephone: String!
+  postcode: String!
+  countryId: ID!
+  company: String
+  vatId: ID
+  isDefaultShipping: Boolean
+  isDefaultBilling: Boolean
+
+  subDistrict: V2Place!
+  district: V2Place!
+  province: V2Province
+  customerAddressType: String!
+  isFullTaxRequest: Boolean
+
+  addressLine: String
+  addressName: String
+  building: String
+  branchId: String
+  fullTaxType: V2TaxType
+}
+
+type V2AddressPWB implements V2Address {
+  id: ID!
+  customerId: ID
+  firstName: String!
+  lastName: String!
+  telephone: String!
+  postcode: String!
+  countryId: ID!
+  company: String
+  vatId: ID
+  isDefaultShipping: Boolean
+  isDefaultBilling: Boolean
+
+  subDistrict: V2Place!
+  district: V2Place!
+  province: V2Province
+  customerAddressType: String!
+  isFullTaxRequest: Boolean
+
+  addressLine: String
+  addressName: String
+  building: String
+  soi: String
+  houseNo: String
+  telMobile: String
+  fax: String
+  fullTaxType: V2TaxType
+}
+
+type V2AddressTOPS implements V2Address {
+  id: ID!
+  customerId: ID
+  firstName: String!
+  lastName: String!
+  telephone: String!
+  postcode: String!
+  countryId: ID!
+  company: String
+  vatId: ID
+  isDefaultShipping: Boolean
+  isDefaultBilling: Boolean
+
+  subDistrict: V2Place!
+  district: V2Place!
+  province: V2Province
+  customerAddressType: String!
+  isFullTaxRequest: Boolean
+
+  addressLine: String
+  addressName: String
+  building: String
+  branchId: String
+  fullTaxType: V2TaxType
+  remark: String
+  houseNo: String
+  fax: String
+  soi: String
+  villageName: String
+  road: String
+  buildingType: String
+  moo: String
+  lat: String
+  lng: String
+}
+
+extend type Query {
+  v2Addresses: [V2Address]
+}

@@ -1,0 +1,25 @@
+
+type V2Category {
+    id: ID!
+    parentId: String
+    name: String
+    isActive: Boolean
+    position: Int
+    level: String
+    path: String
+    includeInMenu: String
+    productCount: Int
+    children: String
+    childrenCount: Int
+    urlKey: String
+    urlPath: String
+    virtualCategoryRoot: String
+    megaCmsBrand: String
+    megaCmsBanner: String
+    megaCmsMenu: String
+    childrenData: [V2Category]
+}
+
+extend type Query {
+    v2Categories: [V2Category]
+}

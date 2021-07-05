@@ -1,0 +1,15 @@
+type CmsBlock {
+  id: ID!
+  identifier: String!
+  title: String
+  content: String
+  creation_time: String
+  update_time: String
+  active: Boolean
+}
+
+extend type Query {
+  cmsBlocks(input: FiltersQuery): [CmsBlock]
+  cmsBlock(id: Int): CmsBlock
+  cmsBlockByIdentifier(identifier: String!, store_id: String!): CmsBlock
+}

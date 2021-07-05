@@ -1,0 +1,151 @@
+enum TaxType {
+  PERSONAL
+  COMPANY
+}
+enum AddressType {
+  SHIPPING
+  BILLING
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+type Place {
+  id: String!
+  name: String!
+}
+
+type Customer {
+  id: ID!
+  group_id: Int
+  created_at: String
+  updated_at: String
+  created_in: String
+  default_billing: String
+  default_shipping: String
+  dob: String
+  gender: Gender
+  taxvat: String @deprecated(reason: "Use `tax_id` instead")
+  email: String
+  firstname: String
+  lastname: String
+  store_id: Int
+  website_id: Int
+  addresses: [CustomerAddress!]!
+  disable_auto_group_change: Int
+  extension_attributes: CustomerExtensionAttributes
+  custom_attributes: JSON
+  message: String
+
+  is_subscribed: Boolean!
+  phone: String
+  tax_id: String
+  t1c_no: String
+  t1c_phone: String
+  language: String
+  need_reaccept_consents: Boolean!
+}
+
+type CustomerExtensionAttributes {
+  is_subscribed: Boolean
+}
+
+input ChangePasswordInput {
+  currentPassword: String
+  newPassword: String
+}
+
+type ChangePasswordResponse {
+  message: String
+}
+
+type CustomerAddress {
+  id: ID!
+  firstname: String!
+  lastname: String!
+  telephone: String!
+
+  building: String
+  address_line: String!
+  subdistrict: Place!
+  district: Place!
+  province: Place!
+  postcode: String!
+
+  address_name: String
+  customer_address_type: AddressType!
+  full_tax_type: TaxType
+  vat_id: String
+  company: String
+  branch_id: String
+
+  country_id: String!
+
+  is_default_billing: Boolean!
+  is_default_shipping: Boolean!
+
+  city: String
+  region_id: String @deprecated(reason: "Use `province.id` instead")
+  region: Region @deprecated(reason: "Use `province` instead")
+  customer_id: Int @deprecated(reason: "Use `parent.id` instead")
+
+  default_billing: Boolean @deprecated(reason: "Use `is_default_billing` instead")
+  default_shipping: Boolean @deprecated(reason: "Use `is_default_shipping` instead")
+  street: [String] @deprecated(reason: "This field is for compatibility with CustomerAddress only")
+
+  custom_attributes: JSON
+    @deprecated(
+      reason: "All mandatory field is moved to the Address, only use this field when you have special requirement for address"
+    )
+}
+
+type Region {
+  region_code: String
+  region: String
+  region_id: Int
+}
+
+input UpdateInputCustomer {
+  id: ID
+  group_id: ID
+  created_at: String
+  updated_at: String
+  created_in: String
+  default_billing: String
+  default_shipping: String
+  dob: String
+  gender: Gender
+  taxvat: String
+  email: String
+  firstname: String
+  lastname: String
+  store_id: Int
+  website_id: Int
+  addresses: JSON
+  disable_auto_group_change: Int
+  extension_attributes: UpdateCustomerExtensionAttributes
+  custom_attributes: JSON
+
+  is_subscribed: Boolean
+  phone: String
+  tax_id: String
+  t1c_no: String
+  t1c_phone: String
+  language: String!
+}
+
+input UpdateCustomerExtensionAttributes {
+  is_subscribed: Boolean
+}
+
+extend type Query {
+  customer: Customer
+}
+
+extend type Mutation {
+  updateCustomer(input: UpdateInputCustomer): Customer
+  changePassword(input: ChangePasswordInput): ChangePasswordResponse
+}

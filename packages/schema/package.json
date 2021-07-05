@@ -1,0 +1,23 @@
+{
+  "name": "@central-tech/schema",
+  "version": "2.29.0",
+  "description": "",
+  "files": [
+    "schema.graphql"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "copy:schema": "cp ../api/schema.graphql ./schema.graphql",
+    "copy:type": "cp ../operation/src/types.ts ./src/index.ts",
+    "prebuild": "yarn copy:schema && yarn copy:type",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/centraldigital/centech-api.git"
+  }
+}

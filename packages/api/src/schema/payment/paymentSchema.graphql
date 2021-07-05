@@ -1,0 +1,149 @@
+type PaymentInformations {
+  payment_methods: [PaymentMethod]
+  extension_attributes: PaymentExtensionAttributes
+  installment_plans: [PaymentServiceInstallPlans!]
+}
+
+type PaymentMethod {
+  code: String
+  title: String
+}
+
+type PaymentServiceInstallPlansExtensionAttributes {
+  p2c2p_ipp_amount_per_month: String
+}
+
+type PaymentServiceInstallPlans implements InstallmentPlanInterface {
+  installmentplan_id: ID!
+  name: String
+  bank_id: Int
+  bank: InstallmentBank
+  currency: String
+  period: String
+  merchant_rate: String
+  customer_rate: String
+  interest_type: String
+  installment_type: String
+  min_amount: String
+  max_amount: String
+  active: String
+  valid_from: String
+  valid_until: String
+  create: String
+  extension_attributes: PaymentServiceInstallPlansExtensionAttributes
+}
+
+type PaymentExtensionAttributes {
+  is_payment_promotion_locked: Boolean!
+  company_credit_available: Boolean
+  company_credit_message: String
+  p2c2p_payment_options: [P2c2pPaymentOption]
+  p2c2p_installment_unavailable_message: String
+  p2c2p_payment_agents: [P2c2pPaymentAgent]
+  p2c2p_credit_card_promotions: [P2c2pCreditCardPromotion]
+  surcharge: String
+}
+
+type P2c2pPaymentOption {
+  payment: String
+  code: String
+}
+
+type P2c2pPaymentAgent {
+  agent_id: String
+  name: String
+  code: String
+  type: String
+  channel: String
+  agent_image: String
+}
+
+type P2c2pCreditCardPromotion {
+  promotion_id: String
+  bank: String
+  description: String
+  card_image: String
+  card_type: String
+  card_name: String
+  banner: String
+  promotion_code: String
+  payment_method: String
+  ipp_plan: String
+  bank_color: String
+  bank_icon: String
+  simple_action: String
+  discount_amount: String
+}
+
+input PaymentInformationInput {
+  payment_method: PaymentMethodInput!
+  email: String
+  billing_address: AddressInput
+  accept_consents: [ConsentType!]
+  remark: String
+  substitution: String
+}
+
+type SetMultiPaymentResponse {
+  statusPayment: Boolean
+}
+
+input MultipleInformationFormat {
+  # payment_information: [MultipleInfoInput!]
+  payment_information: [JSON!]
+}
+
+input MultipleInfoInput {
+  cart_id: String
+  payment_method: PaymentMethodInput!
+  billing_address: AddressInput
+}
+
+input PaymentMethodInput {
+  method: String!
+  extension_attributes: PaymentMethodExtensionAttributesInput
+}
+
+input PaymentMethodExtensionAttributesInput {
+  t1c_earn_card_number: String
+  customer_email: String
+  customer_name: String
+  customer_phone: String
+  apm_agent_code: String
+  apm_channel_code: String
+  promotion_id: String
+  card_issuer: String
+  channel: String
+  request_tax_invoice: Boolean
+  approval_email: String
+  approval_message: String
+  gcl_id: String
+  utm_source: String
+  utm_content: String
+  utm_medium: String
+  utm_campaign: String
+  admin_username: String
+  affiliate: PaymentMethodExtensionAttributeAffiliate
+}
+
+input PaymentMethodExtensionAttributeAffiliate {
+  affiliate_id: Int
+  offer_id: Int
+  transaction_id: String
+}
+
+type SetPaymentInfoResponse {
+  message: String
+  order: JSON
+  redirect_url: String
+}
+
+extend type Query {
+  paymentInformations(isGuest: Boolean, cartId: String, childrenIds: [String!], company_id: Int): PaymentInformations
+}
+
+extend type Mutation {
+  setPaymentInformation(cartId: String, isGuest: Boolean, input: PaymentInformationInput!): SetPaymentInfoResponse
+  updatePaymentInformation(cartId: String, isGuest: Boolean, input: PaymentInformationInput!): SetPaymentInfoResponse
+  updateMultiplePaymentInformation(input: MultipleInformationFormat!): SetMultiPaymentResponse
+}

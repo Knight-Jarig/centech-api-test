@@ -1,0 +1,21 @@
+type ShipmentTrackingItem {
+  con_no: String
+  status_code: String
+  status_desc: String
+  status_date: String
+  update_date: String
+  ref_no: String
+  order_id: String
+  status: String
+  location: String
+}
+
+extend type Order {
+  shipment: [ShipmentTrackingItem!]
+}
+
+extend type Query {
+  trackOrder(incrementId: String!): [ShipmentTrackingItem!]
+}
+
+

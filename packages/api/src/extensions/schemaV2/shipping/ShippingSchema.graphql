@@ -1,0 +1,255 @@
+type V2LineItems {
+  entity_id: ID
+  line_id: ID!
+  line_number: String
+}
+
+type V2PackageOptionProduct {
+  detail: V2Product
+  product_id: ID!
+  item_id: ID!
+  sku: String
+  qty_available_current_sku: Int
+}
+
+type V2QtyData {
+  total_qty_available_in_package: Int
+  total_qty_for_current_package: Int
+  total_qty_ordered_in_cart: Int
+}
+
+type V2MethodLabels {
+  label: String
+  date_time: String
+  time_label: String
+}
+
+type V2MethodData {
+  carrier_title: String
+  method_title: String
+  carrier_code: String
+  method_code: String
+  method_labels: V2MethodLabels
+}
+
+type V2SubPackage {
+  product: [V2PackageOptionProduct]
+  line_items: [V2LineItems]
+  delivery_method: String
+  stock_id: ID!
+  is_package_available: Boolean
+  has_sub_package: Boolean
+  qty_data: V2QtyData
+  method_data: V2MethodData
+}
+
+type V2PackageOption {
+  product: [V2PackageOptionProduct]
+  line_items: [V2LineItems]
+  delivery_method: String
+  stock_id: ID
+  is_package_available: Boolean
+  has_sub_package: Boolean
+  qty_data: V2QtyData
+  method_data: V2MethodData
+  sub_package: [V2SubPackage!]!
+}
+
+type V2EstimateShippingMethod {
+  deliveryMethod: V2DeliveryShippingMethod
+  shippingMethods: [V2ShippingMethods]
+  isAllowSplitOrder: Boolean
+}
+
+type V2PickupStoresLocationDistance {
+  text: String
+  value: Int
+}
+
+type V2StoresLocationOpeningHour {
+  day: String
+  open: String
+  close: String
+}
+
+type V2StoresLocationAdditionalText {
+  totalAvailable: Int
+  totalOrdered: Int
+  timeUnit: String
+  timeLabel: String
+  timeValue: Int
+  dateTime: DateTime
+}
+
+type V2StoresLocationAddress {
+  addressLine: String
+  postcode: String
+  latitude: String
+  longitude: String
+  subDistrict: V2Place
+  district: V2Place
+  province: V2Province
+  countryCode: String
+  telephone: String
+}
+
+type V2StoresLocationSalableItems {
+  sku: String
+  qty: Int
+}
+
+type V2StoresLocation {
+  id: ID
+  name: String
+  code: String
+  address: V2StoresLocationAddress
+  additionalText: V2StoresLocationAdditionalText
+  openingHours: [V2StoresLocationOpeningHour]
+  salableItems: [V2StoresLocationSalableItems]
+  cutOffTime: String
+  stockStatusCode: String
+  stockStatusLabel: String
+}
+
+type V2ShippingMethodCarrier {
+  title: String
+  code: String
+}
+
+type V2DeliveryShippingMethod {
+  title: String
+  caption: String
+  code: String
+}
+
+type V2ShippingMethodDeliveryTimeLabel {
+  methodLabel: String
+  timeLabel: String
+  minLeadTime: DateTime
+  maxLeadTime: DateTime
+  methodType: String
+}
+
+type V2ShippingMethods {
+  carrier: V2ShippingMethodCarrier
+  method: V2DeliveryShippingMethod
+  amount: Float
+  deliveryTimeLabel: V2ShippingMethodDeliveryTimeLabel
+  pickupStoresLocations: [V2StoresLocation]
+}
+
+input V2PickupStoreInput {
+  store_id: ID
+  pickup_store_id: ID
+  receiver_name: String
+  receiver_phone: String
+}
+
+input V2ExtensionAttributesInput {
+  pickup_store: V2PickupStoreInput
+  pickup_location_id: ID
+}
+
+input V2LineItemsInput {
+  line_id: ID!
+  line_number: String
+}
+
+input V2SubPackageInput {
+  line_items: [V2LineItemsInput!]!
+  stock_id: ID!
+  carrier_code: String!
+  method_code: String!
+}
+
+input V2PackageInput {
+  line_items: [V2LineItemsInput!]!
+  stock_id: ID!
+  carrier_code: String!
+  method_code: String!
+  sub_package: V2SubPackageInput
+}
+
+input V2ShippingAddressInput {
+  firstname: String
+  lastname: String
+  email: String
+  city: String
+  telephone: String
+  country_id: String
+  street: [String]
+  vat_id: String
+  company: String
+  region_id: ID
+  region: String
+  postcode: String
+  default_billing: Boolean
+  default_shipping: Boolean
+  region_code: String
+  same_as_billing: Int
+  save_in_address_book: Int
+
+  customer_id: Int
+  address_id: ID
+  address_name: String
+  address_line: String
+  customer_address_type: String
+  building: String
+  district: String
+  district_id: ID
+  subdistrict: String
+  subdistrict_id: ID
+  remark: String
+  billing_type: String
+  branch_id: ID
+  full_tax_request: String
+  full_tax_type: String
+
+  custom_attributes: AddressInputCustomAttributes
+}
+
+input V2SetShippingInformationInput {
+  package: V2PackageInput
+  billing_address: V2ShippingAddressInput!
+  shipping_address: V2ShippingAddressInput!
+  extension_attributes: V2ExtensionAttributesInput
+  carrier_code: String
+  method_code: String
+}
+
+input V2SetValidatePinInput {
+  latitude: String!
+  longitude: String!
+}
+
+input V2DeliveryPackageOptionInput {
+  method_code: String!
+}
+
+input V2PlaceInput {
+  id: String
+  name: String
+}
+
+input V2ProvinceInput {
+  id: String
+  code: String
+  name: String
+}
+
+input V2EstimateShippingInput {
+  postcode: String
+  countryId: ID
+  regionId: Int
+}
+
+extend type Query {
+  v2PackageOptions(cartId: String, storeId: String!): [V2PackageOption]
+  v2DeliveryPackageOptions(cartId: String, input: V2DeliveryPackageOptionInput!): [V2PackageOption]
+  v2EstimateShippingMethods(guestId: String, input: V2EstimateShippingInput!, version: Int): [V2EstimateShippingMethod]
+}
+
+extend type Mutation {
+  v2SetShippingInformation(cartId: String, input: V2SetShippingInformationInput!): ResponseMessage
+  v2SetValidatePin(cartId: String, input: V2SetValidatePinInput!): ResponseMessage
+}

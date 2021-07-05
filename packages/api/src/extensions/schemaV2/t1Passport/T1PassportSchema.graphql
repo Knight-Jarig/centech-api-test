@@ -1,0 +1,110 @@
+type V2T1ProfileData {
+  accountType: String
+  address: [V2T1AddressInterface]
+  card: V2T1Card
+  dateOfBirth: String
+  employeeBUShortCode: String
+  employeeID: String
+  firstName: V2T1NameInterface
+  gender: String
+  isStaff: String
+  lastName: V2T1NameInterface
+  memberLanguagePref: String
+  status: String
+  style: [String]
+  title: V2T1NameInterface
+  svoc: JSON
+  svocError: String
+  segments: [V2T1Segment]
+  imageProfile: String
+  consentDate: String
+  userAccountID: String
+  onlineEmail: V2T1OnlineEmail
+  onlineMobile: V2T1OnlineMobile
+  consentFlag: String
+  consentVersion: String
+  dcsConsentVersion: String
+}
+
+type V2T1AddressInterface {
+  addressType: String
+  typeOfHousing: String
+  homeNo: String
+  villageOrBuilding: String
+  floor: String
+  moo: String
+  soi: String
+  yak: String
+  road: String
+  country: String
+  subDistrict: String
+  postalCode: String
+  district: String
+  city: String
+}
+
+type V2T1Card {
+  cardNo: String
+  pointsBalance: Int
+  pointsExpiryThisYear: Int
+}
+
+type V2T1NameInterface {
+  en: String
+  th: String
+}
+
+type V2T1Segment {
+  segmentLevelID: String
+  segmentLevel: String
+  segmentLevelLongDesc: String
+  endDate: String
+}
+
+type V2T1OnlineEmail {
+  value: String
+  verified: Boolean
+}
+
+type V2T1OnlineMobile {
+  country: String
+  value: String
+  verified: Boolean
+}
+
+type V2T1DeleteProfileResponse {
+  isSuccess: Boolean
+}
+
+type V2GetT1ProfileResponse {
+  mdcMatch: Boolean
+  t1Profile: V2T1ProfileData
+  mdcProfile: V2Customer
+}
+
+type V2CheckEmailRegistered {
+  email: String!
+  hasMdcProfile: Boolean!
+}
+
+type V2LoginT1PassportResponse {
+  mdcToken: String!
+}
+
+input V2LoginT1PassportInput {
+  t1Token: String!
+  email: String
+  password: String
+  acceptConsents: [ConsentType]
+}
+
+extend type Query {
+  v2GetT1CustomerProfile(t1Token: String): V2GetT1ProfileResponse
+  v2CheckEmailRegistered(email: String!): V2CheckEmailRegistered
+}
+
+extend type Mutation {
+  v2ConnectT1Profile(t1Token: String!): V2T1ProfileData
+  v2DeleteT1Profile: V2T1DeleteProfileResponse
+  v2LoginT1Passport(input: V2LoginT1PassportInput): V2LoginT1PassportResponse
+}

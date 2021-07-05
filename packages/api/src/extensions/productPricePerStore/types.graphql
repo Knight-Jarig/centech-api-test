@@ -1,0 +1,27 @@
+type ProductStorePrice {
+  entity_id: ID!
+  id: Int!
+  sku: String!
+  price: Float!
+  special_price: Float
+  configurable_product_items: [ProductStorePrice]
+}
+
+input PricePerStoreInput {
+  sku: String!
+  retailerId: Int!
+}
+
+input GetRetailerByPostcodeInput {
+  postcode: String!
+}
+
+input GetRetailerByIdInput {
+  id: Int!
+}
+
+extend type Query {
+  pricePerStore(input: PricePerStoreInput!): ProductStorePrice
+  retailerByPostcode(input: GetRetailerByPostcodeInput!): Store
+  retailerById(input: GetRetailerByIdInput!): Store
+}

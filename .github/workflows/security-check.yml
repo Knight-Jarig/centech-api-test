@@ -1,0 +1,31 @@
+name: Security Check
+on:
+  pull_request:
+    types: [opened]
+    branches:
+      - develop
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install trivy
+        run: |
+          sudo apt-get install wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+      
+      - name: Scan Code
+        run: |
+          trivy fs --exit-code 1 --ignorefile .trivyignore --severity CRITICAL,HIGH,MEDIUM .
+
+      - name: Scan Image
+        run: |
+          docker build -t centech-api:${{ github.sha }} .
+          trivy image --exit-code 1 --ignorefile .trivyignore --severity CRITICAL,HIGH,MEDIUM centech-api:${{ github.sha }}
+

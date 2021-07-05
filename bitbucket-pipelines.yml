@@ -1,0 +1,155 @@
+image: node:12
+pipelines:
+  default:
+    - step:
+        name: Push to Github
+        clone:
+          depth: full
+        script:
+          - git push git@github.com:centraldigital/centech-api.git --all
+          - git push git@github.com:centraldigital/centech-api.git --tags
+  pull-requests: # Pipelines that run automatically on pull request
+    '**':
+      - step:
+          name: Yarn install
+          caches:
+            - nodecustom
+            - yarn
+          script:
+            - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+            - yarn install
+            - yarn lint
+      - parallel:
+          - step:
+              name: Codegen & Test
+              caches:
+                - nodecustom
+                - yarn
+              script:
+                - yarn workspace @central-tech/api codegen
+                - yarn workspace @central-tech/api test:coverage
+                - yarn workspace @central-tech/api sonar
+          - step:
+              name: Build API
+              caches:
+                - nodecustom
+                - yarn
+              script:
+                - yarn build:api
+          - step:
+              name: Test Build Operation
+              caches:
+                - nodecustom
+                - yarn
+              script:
+                - yarn build:operation
+
+  branches:
+    master:
+      - step:
+          name: Prepare Pipeline & Predic New Version
+          script:
+            - node -v
+            - yarn -v
+            - yarn npm:standard-version
+      - step:
+          name: Codegen Build & Coverage Report & Deploy
+          trigger: manual
+          deployment: Production
+          caches:
+            - nodecustom
+            - yarn
+          script:
+            - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+            - yarn install
+            - yarn build
+          artifacts:
+            - packages/api/src/types/graphql.ts
+            - packages/api/schema.graphql
+            - packages/api/badges/**
+            - packages/api/coverage/**
+            - packages/operation/**
+            - packages/graphql-request/**
+            - packages/react-hooks/**
+            - packages/schema/**
+      - step:
+          name: Version & Deploy to NPM
+          caches:
+            - nodecustom
+            - yarn
+          script:
+            - git remote set-url origin ${BITBUCKET_GIT_SSH_ORIGIN}
+            - echo "$BITBUCKET_BUILD_NUMBER" > BUILD_ID
+            - git add .
+            - git commit -am "Codegen, Build & Coverage Report [skip ci]"
+            - yarn npm:standard-version
+            - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+            - git push --follow-tags origin master
+            - git push --follow-tags git@github.com:centraldigital/centech-api.git
+            - yarn deploy
+          artifacts:
+            - packages/api/**
+      - parallel:
+          - step:
+              name: Sonar Report
+              caches:
+                - nodecustom
+                - yarn
+              script:
+                - yarn sonar
+          - step:
+              name: Report Portal
+              caches:
+                - nodecustom
+                - yarn
+              script:
+                - yarn report
+
+    hotfix/*:
+      - step:
+          name: Codegen Build
+          caches:
+            - nodecustom
+            - yarn
+          script:
+            - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+            - yarn install
+            - yarn build
+          artifacts:
+            - packages/api/src/types/graphql.ts
+            - packages/api/schema.graphql
+            - packages/operation/**
+            - packages/graphql-request/**
+            - packages/react-hooks/**
+            - packages/schema/**
+      - step:
+          trigger: manual
+          deployment: Hotfix
+          name: Version & Deploy to NPM
+          caches:
+            - nodecustom
+            - yarn
+          script:
+            - git remote set-url origin ${BITBUCKET_GIT_SSH_ORIGIN}
+            - echo "$BITBUCKET_BUILD_NUMBER" > BUILD_ID
+            - git add .
+            - git commit -am "Codegen, Build & Coverage Report [skip ci]"
+            - yarn npm:standard-version:hotfix
+            - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+            - git push --follow-tags
+            - git push --follow-tags git@github.com:centraldigital/centech-api.git
+            - yarn deploy
+      - step:
+          name: Sonar Report
+          caches:
+            - nodecustom
+            - yarn
+          script:
+            - yarn workspace @central-tech/api codegen
+            - yarn workspace @central-tech/api test:coverage
+            - yarn workspace @central-tech/api sonar
+
+definitions:
+  caches:
+    nodecustom: ./node_modules
+    yarn: /usr/local/share/.cache/yarn

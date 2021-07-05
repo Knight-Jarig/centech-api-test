@@ -1,0 +1,16 @@
+input ContactUsInput {
+  name: String
+  email: String
+  telephone: String
+  subject: String
+  comment: String
+}
+
+type ContactUsResponse {
+  success: String
+  message: String
+}
+
+extend type Mutation {
+  contactUs(storeCode: String, input: ContactUsInput!): ContactUsResponse
+}

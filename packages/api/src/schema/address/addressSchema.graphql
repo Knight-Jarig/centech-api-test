@@ -1,0 +1,150 @@
+type CustomerAddressCustomAttributesResult {
+  tel_mobile: String
+  remark: String
+  house_no: String
+  district_id: String
+  district: String
+  subdistrict_id: String
+  subdistrict: String
+  region: String
+  customer_address_type: String
+  address_name: String
+  building: String
+  address_line: String
+  fax: String
+  soi: String
+}
+
+input CustomerAddressCustomAttributesInput {
+  tel_mobile: String
+  remark: String
+  house_no: String
+  district_id: String
+  district: String
+  subdistrict_id: String
+  subdistrict: String
+  customer_address_type: String
+  address_name: String
+  building: String
+  address_line: String
+  fax: String
+  soi: String
+}
+
+type CustomerAddressResult {
+  id: Int
+  customer_id: Int
+  firstname: String
+  lastname: String
+  city: String
+  telephone: String
+  country_id: String
+  vat_id: String
+  company: String
+  region_id: String
+  region: String
+  postcode: String
+  default_billing: Boolean
+  default_shipping: Boolean
+  custom_attributes: JSON
+}
+
+type DeleteCustomerAddressResult {
+  is_success: Boolean
+  message: String
+}
+
+type PostcodeResult {
+  postcode: String
+}
+
+input PlaceInput {
+  id: String!
+  name: String!
+}
+
+input CreateCustomerAddress {
+  firstname: String!
+  lastname: String!
+  telephone: String!
+
+  building: String
+  address_line: String!
+  subdistrict: PlaceInput!
+  district: PlaceInput!
+  province: PlaceInput!
+  postcode: String!
+
+  address_name: String
+  customer_address_type: AddressType!
+  full_tax_type: TaxType
+  vat_id: String
+  company: String
+  branch_id: String
+
+  country_id: String
+
+  is_default_billing: Boolean
+  is_default_shipping: Boolean
+
+  custom_attributes: JSON
+
+  "deprecated, for backword compatability only"
+  street: [String!]
+
+  "deprecated, for backword compatability only"
+  city: String
+}
+
+input EditCustomerAddress {
+  id: ID!
+  firstname: String
+  lastname: String
+  telephone: String
+
+  building: String
+  address_line: String
+  subdistrict: PlaceInput!
+  district: PlaceInput!
+  province: PlaceInput
+  postcode: String
+
+  address_name: String
+  customer_address_type: AddressType!
+  full_tax_type: TaxType
+  vat_id: String
+  company: String
+  branch_id: String
+
+  country_id: String
+
+  is_default_billing: Boolean
+  is_default_shipping: Boolean
+
+  custom_attributes: JSON
+
+  "deprecated, for backword compatability only"
+  street: [String!]
+  "deprecated, for backword compatability only"
+  city: String
+}
+
+input DeleteCustomerAddress {
+  address_id: Int
+}
+
+input GetCustomerAddress {
+  address_id: String!
+}
+
+extend type Query {
+  listAddresses(storeCode: String): [CustomerAddressResult]
+  getAddress(input: GetCustomerAddress!): CustomerAddressResult
+  postcodeByLatLng(lat: String!, lng: String!): PostcodeResult
+}
+
+extend type Mutation {
+  addCustomerAddress(input: CreateCustomerAddress): CustomerAddress
+  editCustomerAddress(input: EditCustomerAddress): CustomerAddress
+  deleteCustomerAddress(input: DeleteCustomerAddress): DeleteCustomerAddressResult
+}

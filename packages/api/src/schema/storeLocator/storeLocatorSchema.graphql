@@ -1,0 +1,68 @@
+interface StoreInterface {
+  id: ID
+  name: String
+  is_active: Boolean
+  seller_code: String
+  attribute_set_name: String
+  custom_attributes: StoreCustomAttribute
+  extension_attributes: StoreExtensionAttribute
+}
+
+type Store implements StoreInterface {
+  id: ID
+  name: String
+  is_active: Boolean
+  seller_code: String
+  attribute_set_name: String
+  custom_attributes: StoreCustomAttribute
+  extension_attributes: StoreExtensionAttribute
+}
+
+type StoreExtensionAttribute {
+  address: StoreAddress
+  opening_hours: [[OpenHourExtension]]
+  special_opening_hours: [String]
+  ispu_promise_delivery: String
+  stock_low_indicator_threshold: Int
+}
+
+type OpenHourExtension {
+  start_time: String
+  end_time: String
+}
+
+type StoreAddress {
+  id: Int
+  retailer_id: Int
+  coordinates: Coordinate
+  region: String
+  region_id: Int
+  country_id: String
+  street: [String]
+  postcode: String
+  city: String
+}
+
+type Coordinate {
+  latitude: Float
+  longitude: Float
+}
+
+type StoreCustomAttribute {
+  url_key: String
+  show_contact_form: String
+  inventory_source: String
+  contact_phone: String
+  contact_fax: String
+  min_lead_time: String
+  max_lead_time: String
+  logo: String
+}
+
+extend type Query {
+  """
+  [PWB] - Query store (deprecated)
+  """
+  getStores: [Store]
+  getStore(id: ID!): Store
+}

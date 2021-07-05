@@ -1,0 +1,40 @@
+enum V2Direction {
+  ASC
+  DESC
+}
+
+enum V2FilterInputCondition {
+  EQ
+  GT
+  GTE
+  LT
+  LTE
+  IN
+  LIKE
+  FINSET
+  FROM
+  TO
+  MOREQ
+  NEQ
+  NIN
+  NOTNULL
+  NULL
+}
+
+input V2FilterInput {
+  id: String!
+  optionIds: [String!]!
+  condition: V2FilterInputCondition!
+}
+
+input V2SortInput {
+  id: String!
+  direction: V2Direction!
+}
+
+input V2FilterQueryInput {
+  page: Int
+  limit: Int
+  filters: [V2FilterInput]
+  sorts: [V2SortInput!]
+}

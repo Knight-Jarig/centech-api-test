@@ -1,0 +1,574 @@
+type GuestCartResponse {
+  id: ID!
+}
+
+interface CartInterface {
+  id: String
+  items: [CartItem]
+  items_count: Int
+  items_qty: Int
+  billing_address: CartBillingAddress
+  extension_attributes: CartExtensionAttributes
+  totals: CartTotals
+  guest_id: String
+  has_gift_wrap: Boolean!
+}
+
+type Cart implements CartInterface {
+  id: String
+  items: [CartItem]
+  items_count: Int
+  items_qty: Int
+  billing_address: CartBillingAddress
+  extension_attributes: CartExtensionAttributes
+  totals: CartTotals
+  guest_id: String
+  has_gift_wrap: Boolean!
+}
+
+type CartItemOption {
+  value: String!
+  label: String!
+}
+
+type CartItem {
+  # from cart item
+  item_id: ID!
+  sku: String!
+  qty: Float!
+  name: String
+  price: Float!
+  product_type: String
+  quote_id: String
+
+  # extend from cart totals
+  row_total: Float
+  row_total_incl_tax: Float
+  row_total_with_discount: Float
+  tax_amount: Float
+  discount_percent: Float
+  discount_amount: Float
+  price_incl_tax: Float
+  base_price_incl_tax: Float
+  options: [CartItemOption!]!
+
+  # calculate
+  total_price: Float
+
+  # merged attributes
+  extension_attributes: CartItemExtensionAttributes
+  product: Product
+}
+
+type CartBillingAddressExtensionAttributes {
+  full_tax_request: String
+}
+
+type CartBillingAddressCustomAttributes {
+  address_line: String
+  address_name: String
+  branch_id: String
+  building: String
+  customer_address_type: String
+  subdistrict: String
+  subdistrict_id: String
+  district: String
+  district_id: String
+  region: String
+  postcode: String
+  full_tax_request: String
+  full_tax_type: String
+  company_id: String
+  address_line2: String
+  branch_code: String
+}
+
+type CartBillingAddress {
+  id: Float
+  region: String
+  region_id: String
+  region_code: String
+  company: String
+  country_id: String
+  street: [String]
+  telephone: String
+  postcode: String
+  city: String
+  firstname: String
+  lastname: String
+  vat_id: String
+  email: String
+  same_as_billing: Float
+  save_in_address_book: Float
+  customer_id: Int
+  customer_address_id: Int
+  extension_attributes: CartBillingAddressExtensionAttributes
+  custom_attributes: CartBillingAddressCustomAttributes
+}
+
+type CartExtensionAttributes {
+  free_items: [FreeItem]
+  free_items_added: [FreeItemAdded]
+  free_shipping_offer: FreeShippingOffer
+  shipping_assignments: [CartExtensionAttributesShippingAssigments]
+  order_id: String
+  """
+  [PWB] - Check Cart Merge
+  """
+  is_split_quote: Int
+  """
+  [PWB] - List of child cart
+  """
+  children: [Cart]
+  """
+  [PWB] - Store object when select shipping with store type
+  """
+  retailer: Store
+  """
+  [SSP] - Free Item Count
+  """
+  free_items_qty: Int
+  """
+  [PWB] - Check is it pre-order or not
+  """
+  is_pre_order: Boolean
+  pwb_standard_pre_order_message: String
+}
+
+type FreeShippingOffer {
+  message: String
+}
+type CartExtensionAttributesShippingAssigments {
+  shipping: ShippingAssigmentsShipping
+  items: [Product]
+}
+
+type ShippingAssigmentsShipping {
+  address: CartBillingAddress
+  method: String
+}
+
+type CartItemExtensionAttributes {
+  free_items: [FreeItem]
+  free_items_added: [FreeItemAdded]
+  shipping_assignment: CartItemShippingAssignment
+  parent_quote_item_id: String
+  salable_quantity: Int
+  configurable_product_labels: [String]
+  parent_sku: String
+}
+
+type CartItemShippingAssignment {
+  shipping_method: String
+}
+
+type FreeItem {
+  sku: String
+  qty: Int
+  cart_id: String
+  sales_rule_id: Int
+  sales_rule_action_type: Int
+  sales_rule_action_apply: String
+  product: Product
+}
+
+type FreeItemAdded {
+  quote_id: Int
+  item_id: Int
+  sku: String
+  sales_rule_id: Int
+  qty: Int
+  intent_qty: Int
+  for_item_id: Int
+  associated_item_id: Int
+  product: Product
+}
+
+type CartTotals {
+  grand_total: Float
+  base_grand_total: Float
+  subtotal: Float
+  discount_amount: Float
+  subtotal_with_discount: Float
+  shipping_amount: Float
+  shipping_discount_amount: Float
+  tax_amount: Float
+  shipping_tax_amount: Float
+  subtotal_incl_tax: Float
+  shipping_incl_tax: Float
+  extension_attributes: CartTotalsExtensionAttributes
+  total_segments: [TotalSegment]
+  coupon_code: String
+}
+
+type CartTotalsExtensionAttributesCartSummary {
+  other_discount: Float
+  other_discount_incl_tax: Float
+  other_discount_tax: Float
+  t1c_discount: Float
+  t1c_discount_incl_tax: Float
+  t1c_discount_tax: Float
+  coupon_discount: Float
+  coupon_discount_incl_tax: Float
+  coupon_discount_tax: Float
+  total_save: Float
+  total_save_incl_tax: Float
+  tax_amount: Float
+  total_shipping_fee: Float
+  total_shipping_fee_incl_tax: Float
+}
+
+type CartTotalsExtensionAttributes {
+  t1c_earn_points_estimate: String
+  t1c_forgot_password_url: String
+  reward_points_balance: Float
+  reward_currency_amount: Float
+  surcharge: String
+  t1c_maximum_redeemable_points: Int
+  cart_summary: CartTotalsExtensionAttributesCartSummary
+}
+
+type TotalSegment {
+  code: String
+  title: String
+  value: JSON
+  extension_attributes: JSON
+}
+
+type DeleteItemStatus {
+  success: Boolean
+  message: String
+}
+
+input AddToCartInput {
+  quote_id: String
+  qty: Int
+  sku: String
+  product_option: ProductConfigurableOption
+  extension_attributes: AddToCartExtension
+}
+
+input ProductConfigurableOption {
+  extension_attributes: ProductOptionExtension
+}
+
+input ProductOptionExtension {
+  configurable_item_options: [ProductConfigurableItemOption]
+}
+
+input ProductConfigurableItemOption {
+  option_id: ID
+  option_value: Int
+}
+
+input AddToCartExtension {
+  shipping_assignment: AddToCartShippingAssignMent
+  pickup_store: PickupStoreInput
+}
+
+input AddToCartShippingAssignMent {
+  shipping_method: String
+  store_code: String
+}
+
+type AddToCartResponse {
+  item_id: Int
+  sku: String
+  qty: Int
+  name: String
+  product_type: String
+  message: String
+  extension_attributes: AddToCartResponseExtensionAttribute
+}
+
+type AddToCartResponseExtensionAttribute {
+  quote_id_to_update: Int
+}
+
+input EditCartItemInput {
+  qty: Int!
+  quote_id: String!
+  extension_attributes: EditCartItemExtensionAttribute
+}
+
+input EditCartItemExtensionAttribute {
+  shipping_assignment: EditCartItemShippingAssignment
+  pickup_store: PickupStoreInput
+}
+
+input PickupStoreInput {
+  store_id: ID!
+}
+
+input EditCartItemShippingAssignment {
+  shipping_method: String
+}
+
+type EditCartItemResponse {
+  item_id: Int
+  sku: String
+  qty: Int
+  name: String
+  price: Float
+  product_type: String
+  quote_id: String
+  extension_attributes: JSON
+}
+
+type AddCouponResponse {
+  message: String
+  valid_coupon: [String!]!
+  invalid_coupon: [String!]!
+}
+
+type DeleteCouponResponse {
+  message: String
+}
+
+type BurnPointResponse {
+  message: String
+  all_item_applied_t1c_rule: Boolean
+}
+
+type DeletePointResponse {
+  message: String
+}
+
+type TheOneAccountInfo {
+  points: Int
+  points_used: Int
+  card_no: Float
+  conversion_rate: Int
+  min_allowed_points: Int
+  max_allowed_points: Int
+}
+
+input LoginT1CInput {
+  email: String
+  password: String
+}
+
+type CartMini implements CartInterface {
+  id: String
+  items: [CartItem]
+  items_count: Int
+  items_qty: Int
+  billing_address: CartBillingAddress
+  extension_attributes: CartExtensionAttributes
+  totals: CartTotals
+  guest_id: String
+  has_gift_wrap: Boolean!
+}
+
+type SlotInfo {
+  id: String
+  date_time_from: String!
+  date_time_to: String!
+  extension_attributes: SlotInfoExtensionAttributes
+}
+
+type SlotInfoExtensionAttributes {
+  day_slot_id: Int!
+}
+
+extend type Query {
+  cart(isGuest: Boolean, cartId: String): Cart
+  cartMini(isGuest: Boolean, cartId: String): CartMini
+  shippingSlotInfoHdl(cartId: String!, address: ShippingSlotHdlInput!): [SlotInfo]
+  storePickUp(isGuest: Boolean, cartId: String, filters: SearchConditionsQuery): ListStorePickUp
+}
+
+input ShippingSlotHdlInput {
+  customer_id: Int
+  region: String
+  region_id: String
+  country_id: String!
+  street: [String]
+  telephone: String
+  postcode: String
+  city: String
+  firstname: String
+  lastname: String
+  default_shipping: Boolean
+  vat_id: String
+  company: String
+  custom_attributes: SlotHdlCustomAttributesInput
+}
+
+input SlotHdlCustomAttributesInput {
+  tel_mobile: String
+  district: String
+  subdistrict: String
+  postcode: String
+  house_no: String
+  building: String
+  soi: String
+  district_id: String
+  subdistrict_id: String
+  postcode_id: String
+}
+
+input AddGiftWrapMessageInput {
+  isGuest: Boolean!
+  cartId: String
+  message: String
+}
+
+input DeleteGiftWrapMessageInput {
+  isGuest: Boolean!
+  cartId: String
+}
+
+input RestoreShippingAssignmentInput {
+  isGuest: Boolean!
+  cartId: String
+}
+
+extend type Mutation {
+  editCartItem(id: String, isGuest: Boolean, item_id: String!, input: EditCartItemInput!): EditCartItemResponse
+  deleteCartItem(guest: String, item_id: String!): DeleteItemStatus
+  addCartItem(isGuest: Boolean, input: AddToCartInput!, cartId: String): AddToCartResponse
+  addCoupon(coupon: String, isGuest: Boolean, cartId: String): AddCouponResponse
+  deleteCoupon(isGuest: Boolean, cartId: String): DeleteCouponResponse
+  loginT1(input: LoginT1CInput, isGuest: Boolean, guestToken: String): TheOneAccountInfo
+  burnPoint(points: Float!, isGuest: Boolean, cartId: String): BurnPointResponse
+  deletePoint(isGuest: Boolean, cartId: String): DeletePointResponse
+  addGiftWrapMessage(input: AddGiftWrapMessageInput!): ResponseMessage
+  deleteGiftWrapMessage(input: DeleteGiftWrapMessageInput!): ResponseMessage
+  restoreShippingAssignment(input: RestoreShippingAssignmentInput!): ResponseMessage
+}
+
+type ListStorePickUp {
+  page_cur: Int
+  page_total: Int
+  is_result_from_google: Boolean
+  store_list: [StoreItem]
+}
+
+type StoreItem {
+  id: Int
+  name: String
+  store_code: String
+  is_active: Boolean
+  address: StoreItemAddress
+  extension_attributes: StoreItemExtensionAttributes
+}
+
+type StoreItemAddress {
+  street_number: String
+  building: String
+  soi: String
+  street: String
+  district: String
+  district_id: Int
+  sub_district: String
+  sub_district_id: Int
+  region: String
+  region_id: Int
+  post_code: String
+  contact_number: String
+  country_code: String
+  city: String
+  latitude: String
+  longitude: String
+}
+
+type StoreItemExtensionAttributes {
+  distance: String
+  allocated_capacity: StoreItemExtensionAttributesAllocatedCapacity
+  opening_hours: [StoreItemExtensionAttributesOpeningHours]
+  image: String
+  allow_pick_at_store: Boolean
+  display_as_store_information: Boolean
+  store_pickup: StoreItemExtensionAttributesStorePickUp
+  stock_id: Int
+  position: Int
+  salable_items: [PickupStoreLocationSalableItem]
+  store_delivery: StoreItemExtensionAttributesStoreDelivery
+  additional_text: StoreItemExtensionAttributesAdditionalText
+  cut_off_time: String
+}
+
+type StoreItemExtensionAttributesAllocatedCapacity {
+  allocated_capacity: Int
+}
+
+type StoreItemExtensionAttributesStoreDelivery {
+  stock_id: Int
+  allow_ship_from_store: Boolean
+}
+
+type StoreItemExtensionAttributesOpeningHours {
+  day: String
+  open: String
+  close: String
+}
+
+type StoreItemExtensionAttributesStorePickUp {
+  store_id: Int
+  stock_id: Int
+  allow_ispu: Boolean
+  allow_sts: Boolean
+}
+
+type StoreItemExtensionAttributesAdditionalText {
+  method_code: String
+  method_label_code: String
+  time_value: Int
+  time_unit: String
+  date_time: String
+  extension_attributes: StoreItemExtensionAttributesAdditionalTextExtensionAttributes
+}
+
+type StoreItemExtensionAttributesAdditionalTextExtensionAttributes {
+  additional_text_variable: StoreItemExtensionAttributesAdditionalTextExtensionAttributesAdditionalTextVariable
+}
+
+type StoreItemExtensionAttributesAdditionalTextExtensionAttributesAdditionalTextVariable {
+  total_available: Int
+  total_ordered: Int
+}
+
+input SearchConditionsQuery {
+  page: Int!
+  limit: Int!
+  filters: [SearchConditionsFiltersQuery]
+  sorters: [SearchConditionsSortersQuery]
+}
+
+input SearchConditionsFiltersQuery {
+  name: FiltersQueryName!
+  values: [FiltersQueryValues]!
+}
+
+input FiltersQueryValues {
+  field: FiltersQueryField!
+  value: String!
+}
+
+enum FiltersQueryField {
+  input
+}
+
+enum FiltersQueryName {
+  store_finder
+}
+
+input SearchConditionsSortersQuery {
+  name: SortersQueryName!
+  values: [SortersQueryValues]!
+}
+
+enum SortersQueryName {
+  customer_location
+}
+
+input SortersQueryValues {
+  field: SortersQueryField!
+  value: String!
+}
+
+enum SortersQueryField {
+  latitude
+  longitude
+}

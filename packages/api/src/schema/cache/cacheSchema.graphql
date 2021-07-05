@@ -1,0 +1,13 @@
+input ClearCacheBySkuInput {
+  sku: String!
+  username: String!
+  password: String!
+}
+
+type ClearCacheBySkuResponse {
+  isSuccess: Boolean
+}
+
+extend type Mutation {
+  clearCacheBySku(input: ClearCacheBySkuInput): ClearCacheBySkuResponse
+}

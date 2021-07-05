@@ -1,0 +1,7 @@
+extend input PaymentMethodExtensionAttributesInput {
+  ofm_po_no: String
+  ofm_po_ref: String
+  ofm_po_filename: String
+  ofm_need_callback: Int
+  company_id: Int
+}

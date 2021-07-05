@@ -1,0 +1,82 @@
+enum V2T1RedeemNextProcessEnum {
+  redemption
+  verify
+}
+
+type V2T1RedeemResponse {
+  nextProcess: V2T1RedeemNextProcessEnum!
+  requestID: String
+  noVerifyPointLimit: Int
+  allItemApplied: Boolean
+  message: String
+}
+
+type V2T1RedeemVerifyResponse {
+  nextProcess: V2T1RedeemNextProcessEnum!
+  requestID: String
+  allItemApplied: Boolean
+  message: String
+}
+
+input V2T1RedeemLoginInput {
+  # currently support authorization_code
+  grant_type: String!
+  code: String
+  redirect_uri: String
+}
+
+input V2T1RedeemProfileInput {
+  token: String!
+}
+
+input V2T1RedeemVerifyInput {
+  token: String!
+  value: String!
+  requestID: String!
+  points: Int!
+  guestId: String
+}
+
+input V2T1RedeemInput {
+  token: String!
+  points: Int!
+  guestId: String
+}
+
+input V2T1RefreshTokenInput {
+  refreshToken: String!
+}
+
+type V2T1RedeemProfile {
+  firstName: String
+  lastName: String
+  memberLanguagePreference: String
+  cards: [V2T1Card]
+  employeeId: String
+  imageProfile: String
+  userAccountId: String
+  accountType: String
+  conversionRate: Int
+  minAllowedPoints: Int
+  maxAllowedPoints: Int
+}
+
+type V2T1Token {
+  accessToken: String!
+  expiresIn: Int!
+  idToken: String!
+  refreshToken: String!
+  scope: String!
+  tokenType: String!
+}
+
+extend type Query {
+  v2T1RedeemProfile(input: V2T1RedeemProfileInput!): V2T1RedeemProfile
+}
+
+extend type Mutation {
+  v2T1RedeemLogin(input: V2T1RedeemLoginInput): V2T1Token
+  v2T1Redeem(input: V2T1RedeemInput!): V2T1RedeemResponse
+  v2T1RedeemVerify(input: V2T1RedeemVerifyInput!): V2T1RedeemVerifyResponse
+  v2T1RefreshToken(input: V2T1RefreshTokenInput!): V2T1Token
+}

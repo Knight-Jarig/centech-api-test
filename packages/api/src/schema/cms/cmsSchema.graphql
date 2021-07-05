@@ -1,0 +1,74 @@
+type CmsContent {
+  status: String
+  cms_list: [CmsItem]
+}
+
+type CmsItem {
+  identifier: String
+  name: String
+  url_key: String
+  updated_at: String
+  status: String
+  languages: CmsLanguageField
+  contents: CmsContentDetail
+  page_layout: String
+  custom_field: JSON
+  layout_type: String
+  _id: ID
+}
+
+type CmsContentDetail {
+  meta: JSON
+  instagram: JSON
+  js: String
+  css: String
+  html: String
+}
+
+type CmsLanguageField {
+  en: CmsContentObject
+  th: CmsContentObject
+}
+
+type CmsContentObject {
+  css: String
+  html: String
+  files: CmsFiles
+  meta: JSON
+  lang_code: String
+  _id: String
+  contents: JSON
+}
+
+type CmsFiles {
+  js: String
+  css: String
+}
+
+type CmsPage {
+  id: ID!
+  identifier: String
+  title: String
+  page_layout: String
+  meta_title: String
+  meta_keywords: String
+  meta_description: String
+  content_heading: String
+  content: String
+  creation_time: String
+  update_time: String
+  sort_order: String
+  layout_update_xml: String
+  custom_theme: String
+  active: Boolean
+}
+
+input CmsFilterInput {
+  identifier: String
+  url_key: String
+}
+
+extend type Query {
+  cms(filter: CmsFilterInput): CmsContent
+  cmsPage(id: Int!): CmsPage
+}

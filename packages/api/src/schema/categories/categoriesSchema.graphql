@@ -1,0 +1,72 @@
+"""
+Category
+"""
+type Category {
+  id: ID!
+  parent_id: Int
+  name: String
+  is_active: Boolean
+  position: Int
+  level: Int
+  children: String
+  sub_category: [Category]
+  created_at: String
+  updated_at: String
+  include_in_menu: Boolean
+  meta_title: String
+  meta_keywords: String
+  meta_description: String
+  children_count: Int
+  url_key: String
+  url_path: String
+  path: [Category]
+  is_virtual_category: String
+  virtual_category_root: String
+  description: String
+  display_mode: String
+  image: String
+  icon: String
+  product_count: Int
+  extension_attributes: JSON
+  custom_attributes: JSON
+
+  """
+  extension catalogServiceFilterbyFlashDeal
+  """
+  is_hide_display_price: Boolean
+}
+
+type CategoryFlat {
+  id: ID!
+  entity_id: String!
+  parent_id: String
+  name: String
+  is_active: String
+  position: Int
+  level: String
+  path: String
+  include_in_menu: String
+  product_count: Int
+  children: String
+  children_count: String
+  url_key: String
+  url_path: String
+  virtual_category_root: String
+  image_icon_tablet: String
+  image_mobile: String
+  image: String
+  icon: String
+  mega_cms_brand: String
+  mega_cms_banner: String
+  mega_cms_menu: String
+  display_mode: String
+  segment_information: String
+  children_data: [CategoryFlat]
+}
+
+extend type Query {
+  # categories(storeCode: String): [Categories]
+  category(storeCode: String, id: ID!): Category
+  categories(storeCode: String): [CategoryFlat]
+  categoriesTree: [CategoryFlat]
+}

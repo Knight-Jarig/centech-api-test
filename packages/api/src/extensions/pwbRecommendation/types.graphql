@@ -1,0 +1,40 @@
+type ProductAssociationBySkuResponse {
+  products: [Product]
+  totalCount: Int
+}
+
+type ProductSimilarBySkuResponse {
+  products: [Product]
+  totalCount: Int
+}
+
+type ProductAssociationViewBySkuResponse {
+  products: [Product]
+  totalCount: Int
+}
+
+input ProductAssociationBySkuInput {
+  sku: String!
+  limit: Int
+  page: Int
+}
+
+input ProductSimilarBySkuInput {
+  sku: String!
+  limit: Int
+  page: Int
+}
+
+input ProductAssociationViewBySkuInput {
+  sku: String!
+  limit: Int
+  page: Int
+}
+
+extend type Query {
+  productRecommendationBySku(sku: String): JSON
+  homepageRecommendationByUserId(customerId: String): JSON
+  pwbProductAssociationBySku(input: ProductAssociationBySkuInput): ProductAssociationBySkuResponse
+  pwbProductSimilarBySku(input: ProductSimilarBySkuInput): ProductSimilarBySkuResponse
+  pwbProductAssociationViewBySku(input: ProductAssociationViewBySkuInput): ProductAssociationViewBySkuResponse
+}

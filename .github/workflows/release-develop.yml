@@ -1,0 +1,166 @@
+name: ReleaseDevelop
+on:
+  pull_request:
+    types: [closed]
+    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      release_type:
+        required: true
+        description: 'Release Type ( auto, minor or patch )'
+        default: 'auto'
+
+jobs:
+  test:
+    if: ${{ github.event.pull_request.merged == true }}
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache yarn cache
+        uses: actions/cache@v2
+        id: cache-yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
+      - run: yarn install
+      - run: yarn workspace @central-tech/api codegen
+      - run: yarn workspace @central-tech/api test:coverage
+
+  release:
+    if: ${{ github.event.pull_request.merged == true }}
+    name: Release alpha
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      INPUT_RELEASE_TYPE: ${{ (contains(github.head_ref, 'merge/master-to-dev') || github.head_ref == 'master') && 'minor' || github.event.inputs.release_type }}
+    steps:
+      - name: 'Block Concurrent Executions'
+        uses: softprops/turnstyle@v1
+        with:
+          poll-interval-seconds: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache yarn cache
+        uses: actions/cache@v2
+        id: cache-yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
+      - run: yarn install
+      - name: Setup git user
+        run: |
+          git config user.name standard-version-bot
+          git config user.email standard-version-bot@users.noreply.github.com
+      - name: Generate Version Tag release-as ${{ env.INPUT_RELEASE_TYPE }}
+        id: generate_version_tag
+        if: ${{ env.INPUT_RELEASE_TYPE  == 'auto' || env.INPUT_RELEASE_TYPE  == 'minor' || env.INPUT_RELEASE_TYPE == 'patch' }}
+        continue-on-error: true
+        run: |
+          npx standard-version --release-as ${{ env.INPUT_RELEASE_TYPE }} --prerelease alpha
+      - name: Generate Version
+        id: generate_version
+        if: ${{ env.INPUT_RELEASE_TYPE  != 'auto' && env.INPUT_RELEASE_TYPE  != 'minor' && env.INPUT_RELEASE_TYPE != 'patch' }}
+        continue-on-error: true
+        run: |
+          npx standard-version --prerelease
+      - name: Publish tag
+        id: publish_tag
+        if: ${{ steps.generate_version.outcome == 'success' || steps.generate_version_tag.outcome  == 'success' }}
+        run: |
+          git push -f
+          git push -f --tags
+          echo ::set-output name=tag_name::$(git describe HEAD --abbrev=0)
+          echo ::set-output name=version::$(git describe HEAD --abbrev=0  | grep -oP "^versions/\K.*")
+      - name: Reset Commit
+        id: try_publish_tag
+        if: ${{ steps.generate_version.outcome == 'failure' || steps.generate_version_tag.outcome  == 'failure'}}
+        run: |
+          git reset --hard HEAD~1
+          git pull
+      - name: Generate Version Tag release-as ${{ env.INPUT_RELEASE_TYPE }}
+        if: ${{ ( env.INPUT_RELEASE_TYPE  == 'auto' || env.INPUT_RELEASE_TYPE  == 'minor' || env.INPUT_RELEASE_TYPE == 'patch' ) &&  steps.generate_version_tag.outcome  ==  'failure' }}
+        run: |
+          npx standard-version --release-as ${{ env.INPUT_RELEASE_TYPE }} --prerelease alpha
+      - name: Generate Version
+        if: ${{ env.INPUT_RELEASE_TYPE  != 'auto' && env.INPUT_RELEASE_TYPE  != 'minor' && env.INPUT_RELEASE_TYPE != 'patch' && steps.generate_version.outcome == 'failure' }}
+        run: |
+          npx standard-version --prerelease
+      - name: Publish tag
+        id: new_publish_tag
+        if: ${{ steps.generate_version.outcome == 'failure' || steps.generate_version_tag.outcome  ==  'failure'  }}
+        run: |
+          git push -f
+          git push -f --tags
+          echo ::set-output name=tag_name::$(git describe HEAD --abbrev=0)
+          echo ::set-output name=version::$(git describe HEAD --abbrev=0  | grep -oP "^versions/\K.*")
+      - name: Upload Package.json
+        uses: actions/upload-artifact@v2
+        with:
+          name: root-package
+          path: package.json
+      - run: yarn build
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_name: ${{ steps.publish_tag.outputs.version || steps.new_publish_tag.outputs.version }}
+          tag_name: ${{ steps.publish_tag.outputs.tag_name || steps.new_publish_tag.outputs.tag_name }}
+          body_path: CHANGELOG.md
+      - run: yarn deploy
+        name: publish to npmjs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: actions/setup-node@v2
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Rename Package for deploy to github
+        run: |
+          sed -i -e "s/@central-tech/@centraldigital/g" package.json
+          grep -rl @central-tech packages | xargs sed -i 's/@central-tech/@centraldigital/g'
+      - run: yarn install
+      - run: yarn build
+      - run: yarn deploy
+        name: publish to github
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

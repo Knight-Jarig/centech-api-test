@@ -1,0 +1,35 @@
+type V2SuggestSearchCategory {
+  id: String
+  name: String
+  parentId: String
+  urlPath: String
+  isGtm: Boolean
+}
+
+type V2SuggestSearchResult {
+  products: [V2Product!]!
+  categories: [V2SuggestSearchCategory!]!
+  suggestionTerms(input: V2SuggestSearchInput): [String!]!
+}
+
+type V2TrendSearchResult {
+  trendingTerms: [String!]!
+}
+
+input V2SuggestSearchInput {
+  keyword: String!
+  productSize: Int
+  categorySize: Int
+  suggestionTermSize: Int
+}
+
+input v2SuggestKeywordInput {
+  keyword: String!
+  size: Int
+}
+
+extend type Query {
+  v2SuggestSearch(input: V2SuggestSearchInput): V2SuggestSearchResult!
+  v2SuggestKeywordSearch(input: v2SuggestKeywordInput): [String!]!
+  v2TrendSearch(size: Int): V2TrendSearchResult!
+}

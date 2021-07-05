@@ -1,0 +1,274 @@
+enum V2CartFlag {
+  GIFT_WRAPPING
+}
+
+enum V2StockInvalidFlag {
+  OUT_OF_STOCK
+  NOT_ENOUGH_STOCK
+}
+
+type V2CartItemPriceBreakdown {
+  subtotal: Float!
+  discount: Float!
+  vat: Float!
+  grandTotal: Float!
+}
+
+type V2CartPriceBreakdownThe1Redemption {
+  point: Float!
+  discount: Float!
+}
+
+type V2CartPriceBreakdown {
+  subtotal: Float!
+  totalWithoutShipping: Float!
+  subtotalWithDiscount: Float!
+  discount: Float!
+  giftWrapping: Float!
+  shipping: Float!
+  vat: Float!
+  creditCardOnTop: Float!
+  the1Redemption: V2CartPriceBreakdownThe1Redemption!
+  grandTotal: Float!
+  totalQty: Int!
+}
+
+type V2CartItem {
+  id: String!
+  quantity: Int!
+  priceBreakdown: V2CartItemPriceBreakdown!
+  product: V2Product!
+  productOptions: [V2ProductOption!]!
+  parent: V2Product
+  freeItems: [V2CartFreeItem!]!
+  type: String!
+}
+
+type V2CartFreeItem {
+  id: String!
+  quantity: Int!
+  product: V2Product!
+  productOptions: [V2ProductOption!]
+  stockInvalid: V2StockInvalidFlag
+}
+
+type V2CartSeller {
+  id: String!
+  name: String!
+  items: [V2CartItem!]!
+}
+
+type V2FreeShippingOffer {
+  message: String
+}
+
+type V2CartCouponCode {
+  id: String!
+  code: String!
+  amount: Float!
+}
+
+type V2SummarySection {
+  id: String!
+  title: String!
+  amount: Float!
+}
+
+type V2Cart {
+  id: String!
+  flags: [V2CartFlag!]!
+  couponCodes: [V2CartCouponCode!]!
+  priceBreakdown: V2CartPriceBreakdown!
+  sellers: [V2CartSeller!]!
+  freeShippingOffer: V2FreeShippingOffer
+  freeItems: [V2CartFreeItem!]!
+  summarySection: [V2SummarySection!]!
+  guestId: String
+  isPaymentPromotionLocked: Boolean
+  promotionCardName: String
+}
+
+type V2CartMini {
+  id: String!
+  itemCount: Int
+  itemQuantity: Int
+  guestId: String
+}
+
+input V2CartAddGiftWrappingInput {
+  guestId: String
+  message: String
+}
+
+type V2DeleteCartItem {
+  success: Boolean!
+}
+
+input V2DeleteCartItemInput {
+  itemId: Int!
+  guestId: String
+}
+
+type V2ListStorePickUp {
+  page: Int
+  total: Int
+  isResultFromGoogle: Boolean
+  storeList: [V2StoreItem]
+}
+
+type V2StoreItem {
+  id: Int
+  name: String
+  code: String
+  address: V2StoresLocationAddress
+  distance: String
+  openingHours: [V2StoresLocationOpeningHour]
+  additionalText: V2StoresLocationAdditionalText
+}
+
+type V2AddCartItemResponse {
+  id: String!
+  quantity: Int!
+  product: V2Product!
+  productOptions: [V2ProductOption!]!
+  parent: V2Product
+}
+
+input V2StorePickUpInput {
+  guestId: String
+  filters: V2SearchConditionsQuery
+}
+
+input V2SearchConditionsQuery {
+  page: Int!
+  limit: Int!
+  filters: [V2SearchConditionsFiltersQuery]
+  sorters: [V2SearchConditionsSortersQuery]
+}
+
+input V2SearchConditionsFiltersQuery {
+  name: V2FiltersQueryName!
+  values: [V2FiltersQueryValues]!
+}
+
+input V2FiltersQueryValues {
+  field: V2FiltersQueryField!
+  value: String!
+}
+
+enum V2FiltersQueryField {
+  input
+}
+
+enum V2FiltersQueryName {
+  store_finder
+}
+
+input V2SearchConditionsSortersQuery {
+  name: SortersQueryName!
+  values: [SortersQueryValues]!
+}
+
+enum V2SortersQueryName {
+  customer_location
+}
+
+input V2SortersQueryValues {
+  field: V2SortersQueryField!
+  value: String!
+}
+
+enum V2SortersQueryField {
+  latitude
+  longitude
+}
+
+type V2AddCouponResponse {
+  status: Boolean!
+  message: String
+}
+
+type V2CartChangeQuantityResponse {
+  status: Boolean!
+}
+
+type V2CartAddGiftWrappingResponse {
+  status: Boolean!
+}
+
+type V2CartChangeGiftWrappingResponse {
+  status: Boolean!
+}
+
+type V2CartDeleteGiftWrappingResponse {
+  status: Boolean!
+}
+
+input V2AddCartItemProductOptionsInput {
+  id: ID!
+  value: Int!
+}
+
+input V2AddCartItemInput {
+  guestId: String
+  quantity: Int!
+  sku: String!
+  productOptions: [V2AddCartItemProductOptionsInput]
+}
+
+input V2ChangeQTYInput {
+  guestId: String
+  cartId: Int!
+  itemId: Int!
+  quantity: Int!
+}
+
+input V2DeleteGiftWrappingInput {
+  guestId: String
+}
+
+input V2AddCouponInput {
+  coupon: String!
+  guestId: String
+}
+
+type V2DeleteCouponResponse {
+  status: Boolean!
+  message: String
+}
+
+input V2DeleteCouponInput {
+  guestId: String
+}
+
+input V2CartInput {
+  guestId: String
+}
+
+type V2CartGiftWrapping {
+  giftMessageId: Int
+  customerId: Int
+  message: String
+}
+
+input V2CartGiftWrappingInput {
+  guestId: String
+}
+
+extend type Query {
+  v2Cart(input: V2CartInput): V2Cart!
+  v2CartMini(input: V2CartInput): V2CartMini!
+  v2StorePickUp(input: V2StorePickUpInput): V2ListStorePickUp
+  v2CartGiftWrapping(input: V2CartGiftWrappingInput): V2CartGiftWrapping
+}
+
+extend type Mutation {
+  v2DeleteCartItem(input: V2DeleteCartItemInput!): ResponseMessage
+  v2CartAddCoupon(input: V2AddCouponInput!): V2AddCouponResponse
+  v2CartDeleteCoupon(input: V2DeleteCouponInput): V2DeleteCouponResponse
+  v2CartChangeQuantity(input: V2ChangeQTYInput!): V2CartChangeQuantityResponse
+  v2CartChangeGiftWrapping(input: V2CartAddGiftWrappingInput!): V2CartChangeGiftWrappingResponse
+  v2CartDeleteGiftWrapping(input: V2DeleteGiftWrappingInput): V2CartDeleteGiftWrappingResponse
+  v2CartAddGiftWrapping(input: V2CartAddGiftWrappingInput!): V2CartAddGiftWrappingResponse
+  v2AddCartItem(input: V2AddCartItemInput!): V2AddCartItemResponse
+}

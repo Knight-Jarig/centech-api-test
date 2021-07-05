@@ -1,0 +1,66 @@
+enum V2RewardListFilterId {
+  campaign_id
+  tags
+  status
+  name
+  category_ids
+}
+
+enum V2RewardListSortId {
+  id
+  name
+  begins_date
+  ends_date
+}
+
+
+type V2RewardResponse {
+  total: Int
+  perPage: Int
+  currentPage: Int
+  lastPage: Int
+  from: Int
+  to: Int
+  data: [V2Reward]
+}
+
+type V2Reward {
+  id: Int
+  rewardType: String
+  status: String
+  name: String
+  displayName: String
+  description: String
+  shortDescription: String
+  termsCondition: String
+  couponConditionDescription: String
+  image: String
+  tags: [String]
+  category: [String]
+  voucherCodeType: String
+  voucherQuota: Int
+  voucherCustomerLimit: Int
+  isRequiredCitizenId: Boolean
+}
+
+input V2RewardListFilter {
+  id: V2RewardListFilterId!
+  optionIds: [String]!
+}
+
+input V2RewardsListSort {
+  id: V2RewardListSortId!
+  direction: V2Direction!
+}
+
+input V2FilterRewards {
+  limit: Int
+  page: Int
+  filters: [V2RewardListFilter]
+  sort: V2RewardsListSort
+  userId: String
+}
+
+extend type Query {
+  v2Rewards(input: V2FilterRewards): V2RewardResponse
+}

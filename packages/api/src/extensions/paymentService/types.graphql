@@ -1,0 +1,104 @@
+enum CardType {
+  Visa
+  MasterCard
+  AMEX
+  JCB
+  UnionPay
+  Others
+}
+
+enum PaymentServiceKey {
+  payment_service_fullpayment
+  payment_service_installment
+  payment_service_bank_transfer
+  payment_service_dolfin
+}
+
+type Bank {
+  id: ID!
+  name: String
+  image: String
+  icon: String
+  color: String
+  active: Boolean
+}
+
+type Card {
+  id: ID!
+  type: CardType!
+  masked_number: String!
+  is_default: Boolean!
+  expiry_month: Int!
+  expiry_year: Int!
+  bank_id: String
+  bank_name: String
+  promo_codes: [String]
+  bank: Bank
+  created_at: DateTime
+}
+
+type BinLookup {
+  bank_id: String
+  promo_codes: [String]
+}
+
+type PaymentStatusResponse {
+  is_success: Boolean!
+  response_code: String
+  description: String
+  order_id: String
+  amount: Float
+  currency: String
+  key: String
+}
+
+extend input PaymentMethodInput {
+  installment_plan_id: String
+}
+
+extend input PaymentMethodExtensionAttributesInput {
+  card_code: String
+}
+
+input SavedCardInput {
+  card_id: String!
+  encrypted_card_data: String
+}
+
+input CardInput {
+  encrypted_card_data: String!
+  is_store_card: Boolean!
+  cardholder_name: String!
+  expiry_month: Int!
+  expiry_year: Int!
+}
+
+input CardSort {
+  id: CardSortIdEnum!
+  direction: SortDirection!
+}
+
+enum CardSortIdEnum {
+  ID
+  CREATED_AT
+}
+
+extend type Query {
+  cards(sort: CardSort): [Card!]!
+  binLookup(bin: String!): BinLookup!
+  paymentOffline(incrementId: String!, key: String!): PaymentOffileDetail!
+  paymentStatus(incrementId: String!, key: String!, paymentServiceKey: PaymentServiceKey!): PaymentStatusResponse!
+}
+
+extend type Mutation {
+  setDefaultCard(cardId: String!): Card!
+  deleteCard(cardId: String!): Boolean
+  createCard(cardInput: CardInput!, setDefault: Boolean!): Card!
+  repayment(incrementId: String!, card: CardInput, saved_card: SavedCardInput): SetPaymentInfoResponse!
+}
+
+extend input PaymentInformationInput {
+  card: CardInput
+  saved_card: SavedCardInput
+  payment_service_methods: PaymentServiceKey
+}

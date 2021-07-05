@@ -1,0 +1,292 @@
+type EstimateShippingMethods {
+  method: String
+  method_caption: String
+  method_code: String
+  fastest_method: String
+  fastest_method_caption: String
+  free_method: String
+  free_method_cost: String
+  shipping_method: [ShippingMethods]
+}
+
+type ShippingMethods {
+  carrier_code: String
+  method_code: String
+  carrier_title: String
+  caption: String
+  method_title: String
+  amount: Int
+  base_amount: Int
+  available: Boolean
+  error_message: String
+  price_excl_tax: Int
+  price_incl_tax: Int
+  extension_attributes: ShippingMethodExtension
+}
+
+type PickupStoresLocationAddress {
+  street_number: String
+  building: String
+  soi: String
+  street: String
+  district: String
+  district_id: Int
+  sub_district: String
+  sub_district_id: Int
+  region: String
+  region_id: String
+  post_code: String
+  contact_number: String
+  country_code: String
+  city: String
+  latitude: String
+  longitude: String
+}
+
+type PickupStoresLocationOpeningHours {
+  day: String
+  open: String
+  close: String
+}
+
+type PickupStoresLocationStorePickup {
+  stock_id: Int
+  allow_ispu: Boolean
+  allow_sts: String
+}
+
+type PickupStoresLocationSalableItems {
+  sku: String
+  qty: Int
+}
+
+type PickupStoresLocationAdditionalTextVariable {
+  total_available: Int
+  total_ordered: Int
+}
+
+type PickupStoresLocationAdditionalTextExtensionAttributes {
+  additional_text_variable: PickupStoresLocationAdditionalTextVariable
+}
+
+type PickupStoresLocationAdditionalText {
+  method_code: String
+  method_label_code: String
+  time_value: Int
+  time_unit: String
+  date_time: String
+  extension_attributes: PickupStoresLocationAdditionalTextExtensionAttributes
+}
+
+type PickupStoresLocationExtensionAttributes {
+  opening_hours: [PickupStoresLocationOpeningHours]
+  store_pickup: PickupStoresLocationStorePickup
+  stock_id: Int
+  image: String
+  allow_pick_at_store: Boolean
+  display_as_store_information: Boolean
+  salable_items: [PickupStoresLocationSalableItems]
+  additional_text: PickupStoresLocationAdditionalText
+  cut_off_time: String
+}
+
+type PickupStoresLocation {
+  id: Int
+  name: String
+  store_code: String
+  is_active: Boolean
+  address: PickupStoresLocationAddress
+  extension_attributes: PickupStoresLocationExtensionAttributes
+  distance: PickupStoresLocationDistance
+}
+
+type ShippingMethodExtension {
+  pickup_locations: [PickupLocation]
+  pickup_stores_location(filter: PickupStoreLocationFilter, limit: Int, offset: Int): [PickupStoresLocation]
+  gmap_api_key: String
+  shipping_slot_list: [ShippingSlotItem]
+  messages: [ShippingMethodExtensionMessage]
+  is_pre_order: Boolean
+  delivery_time_label: ShippingMethodExtensionDeliveryTimeLabel
+}
+
+type ShippingMethodExtensionDeliveryTimeLabel {
+  method_type: String
+  method_label: String
+  min_lead_time: String
+  max_lead_time: String
+  time_label: String
+}
+
+type PickupStoresLocationDistance {
+  text: String
+  value: Int
+}
+
+input PickupStoreLocationFilter {
+  keyword: String
+  location: PickupStoreLocationFilterLatLng
+  input: EstimateShippingInput
+}
+
+input PickupStoreLocationFilterLatLng {
+  lat: String!
+  lng: String!
+}
+
+type ShippingMethodExtensionMessage {
+  message_code: String
+  message: String
+  pre_render_message: String
+}
+
+type ShippingSlotItem {
+  id: Int
+  date_time_from: String ##"2019-04-04 09:00:00",
+  date_time_to: String ##"2019-04-04 09:30:00",
+  extension_attributes: ShippingSlotItemExtensionAttributes
+}
+
+type ShippingSlotItemExtensionAttributes {
+  day_slot_id: Int
+}
+
+input ShippingSlotItemExtensionAttributesInput {
+  day_slot_id: Int
+}
+
+input SetShippingSlotHdlInput {
+  date_time_from: String ##"2019-04-04 09:00:00",
+  date_time_to: String ##"2019-04-04 09:30:00",
+  extension_attributes: ShippingSlotItemExtensionAttributesInput
+}
+
+type PickupLocation {
+  id: String
+  code: String
+  name: String
+  display_order: String
+  address_line1: String
+  district: String
+  province: String
+  region_id: String
+  postal_code: String
+  lat: String
+  long: String
+  pickup_fee: String
+  pos_handling_fee: String
+  opening_hours: [String]
+  extension_attributes: PickupLocationExtension
+}
+
+type PickupLocationExtension {
+  additional_address_info: AdditionalAddressInfo
+  available_services: [String]
+}
+
+type AdditionalAddressInfo {
+  subdistrict: String
+  subdistrict_id: String
+  district: String
+  district_id: String
+  region_id: String
+  region_name: String
+}
+
+input EstimateShippingInput {
+  customer_id: Int
+  region: String
+  region_id: Int!
+  country_id: String!
+  street: [String]
+  telephone: String
+  postcode: String
+  city: String
+  firstname: String
+  lastname: String
+  default_shipping: Boolean
+  custom_attributes: [CustomAttributesInput]
+}
+
+input AddressInput {
+  customer_id: Int
+  customer_address_id: Int
+  firstname: String
+  lastname: String
+  email: String
+  city: String
+  telephone: String
+  country_id: String
+  street: [String]
+  vat_id: String
+  company: String
+  region_id: String
+  region: String
+  postcode: String
+  default_billing: Boolean
+  default_shipping: Boolean
+
+  region_code: String
+  same_as_billing: Int
+  save_in_address_book: Int
+
+  custom_attributes: AddressInputCustomAttributes
+}
+
+input AddressInputCustomAttributes {
+  address_line: String
+  address_name: String
+  branch_id: String
+  customer_address_type: String
+  remark: String
+  house_no: String
+  moo: String
+  village_name: String
+  road: String
+  district_id: String
+  district: String
+  subdistrict_id: String
+  subdistrict: String
+  building: String
+  building_type: String
+  fax: String
+  soi: String
+  postcode: String
+  full_tax_request: String
+  full_tax_type: String
+  lat: String
+  lng: String
+  company_id: String
+  address_line2: String
+  branch_code: String
+  location_name: String
+  latitude: String
+  longitude: String
+}
+
+input SetShippingInformationInputExtensionAttributesPickupStore {
+  store_id: ID!
+}
+
+input SetShippingInformationInputExtensionAttributes {
+  pickup_store: SetShippingInformationInputExtensionAttributesPickupStore
+}
+
+input SetShippingInformationInput {
+  shipping_address: AddressInput
+  billing_address: AddressInput
+  shipping_method_code: String
+  shipping_carrier_code: String
+  extension_attributes: SetShippingInformationInputExtensionAttributes
+}
+
+extend type Mutation {
+  estimateShippingMethods(cartId: String, isGuest: Boolean, input: EstimateShippingInput!): [ShippingMethods]
+  setShippingInformation(cartId: String, isGuest: Boolean, input: SetShippingInformationInput!): ResponseMessage
+  setShippingSlotHdl(cartId: String, isGuest: Boolean, input: SetShippingSlotHdlInput!): ResponseMessage
+}
+
+extend type Query {
+  estimateShippingMethods(cartId: String, isGuest: Boolean, input: EstimateShippingInput!): [EstimateShippingMethods]
+  estimateShippingMethodsV4(cartId: String, isGuest: Boolean, input: EstimateShippingInput!): [EstimateShippingMethods]
+}

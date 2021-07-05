@@ -1,0 +1,26 @@
+type V2DeliveryOptionByPostcodeDeliveryMethod {
+  method: String
+  label: String
+  leadTimes: String
+  freeLabel: String
+  sortOrder: String
+}
+
+input V2DeliveryOptionByPostcodeInput {
+  sku: String!
+  postcode: String
+  onlineSalable: Boolean
+  offlineSalable: Boolean
+  lat: String
+  lng: String
+}
+
+type V2DeliveryOptionByPostcode {
+  title: String!
+  postcode: String
+  methods: [V2DeliveryOptionByPostcodeDeliveryMethod!]!
+}
+
+extend type Query {
+  v2DeliveryOptionByPostcode(input: V2DeliveryOptionByPostcodeInput!): [V2DeliveryOptionByPostcode!]!
+}

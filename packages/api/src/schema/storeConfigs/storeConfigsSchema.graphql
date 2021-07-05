@@ -1,0 +1,44 @@
+type StoreConfig {
+  id: ID
+  code: String
+  website_id: Int
+  locale: String
+  base_currency_code: String
+  default_display_currency_code: String
+  timezone: String
+  weight_unit: String
+  base_url: String
+  base_link_url: String
+  base_static_url: String
+  base_media_url: String
+  secure_base_url: String
+  secure_base_link_url: String
+  secure_base_static_url: String
+  secure_base_media_url: String
+  extension_attributes: ConfigExtensionAttribute
+}
+
+type GoogleTagManagerCookieExtensionAttribute {
+  identifier: String
+  experiment_id: String
+  cookie_variant_id: String
+  request_header_value: String
+}
+
+type ConfigExtensionAttribute {
+  social_facebook_app_id: String
+  google_tag_manager_key: String
+  google_tag_manager_cookies: [GoogleTagManagerCookieExtensionAttribute]
+  review_image_upload: ConfigReviewImageUpload
+}
+
+type ConfigReviewImageUpload {
+  max_number_of_file_upload: Int
+  max_size_upload: Float
+  allow_extensions: [String]
+  folder_upload: String
+}
+
+extend type Query {
+  storeConfigs: [StoreConfig]
+}

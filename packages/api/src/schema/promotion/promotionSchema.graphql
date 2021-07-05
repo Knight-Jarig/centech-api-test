@@ -1,0 +1,123 @@
+type PromotionSuggestion {
+  sku: String
+  extension_attributes: PromotionSuggestionExtensionAttribute
+}
+
+type PromotionSuggestionExtensionAttribute {
+  free_items: [FreeItemPromotion]
+  bundles: [BundlePromotion]
+  credit_card_promotions: [CreditCardPromotion]
+  credit_card_installment_promotions: [CreditCardPromotion]
+  t1c: [T1CPromotion]
+  all_applicable_rules: [applicableRulesPromotion]
+  tier_price: [TierPricePromotion]
+}
+
+enum TierPricePromotionType {
+  fixed_amount
+  special_price
+  percent_amount
+}
+
+type TierPricePromotion {
+  id: ID! # alias of rule_id
+  name: String!
+  amount: Float! # alias of discount_amount
+  extension_attributes: TierPricePromotionExtension!
+  # add custom type
+  type: TierPricePromotionType!
+}
+
+type TierPricePromotionExtension {
+  qty_from: Int
+  qty_to: Int
+  applicable_store_ids: [Int]
+}
+
+type applicableRulesPromotion {
+  rule_id: ID!
+  name: String
+  description: String
+  extension_attributes: JSON
+}
+
+type BundlePromotion {
+  products: [BundleSkuList]
+  rule_id: Int
+  simple_action: String
+  coupon_code: String
+  is_active: Boolean
+  from_date: String
+  to_date: String
+  label: String
+  discount_amount: Float
+  discount_qty: Int
+  discount_step: Int
+  total_price_with_discount: Float
+  total_price: Float
+  total_discount_amount: Float
+}
+
+type BundleSkuList {
+  sku: String
+}
+
+type FreeItemPromotion {
+  freebies: [FreeItemProduct]
+  rule_id: Int
+  simple_action: String
+  coupon_code: String
+  is_active: Boolean
+  from_date: String
+  to_date: String
+  label: String
+  discount_amount: Float
+  discount_qty: Int
+  discount_step: Int
+}
+
+type FreeItemProduct {
+  sku: String
+  qty: Int
+}
+
+type CreditCardPromotion {
+  title: String
+  promotion_id: Int
+  bank_icon: String
+  bank_color: String
+  rule_id: Int
+  simple_action: String
+  coupon_code: String
+  is_active: Boolean
+  from_date: String
+  to_date: String
+  label: String
+  discount_amount: Float
+  discount_qty: Int
+  discount_step: Int
+}
+
+type T1CPromotion {
+  redemption_rate: Float
+  maximum_point_rate: Int
+  redeemable_points: [Float]
+  redeemable_amounts: [Float]
+  rule_id: Int
+  simple_action: String
+  coupon_code: String
+  is_active: Boolean
+  from_date: String
+  to_date: String
+  label: String
+  discount_amount: Float
+  discount_qty: Int
+  discount_step: Int
+}
+
+extend type Query {
+  """
+  [PWB] - Search Promotion by search criteria
+  """
+  promotionSuggestion(filter: FiltersQuery): [PromotionSuggestion]
+}

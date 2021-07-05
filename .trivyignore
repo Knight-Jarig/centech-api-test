@@ -1,0 +1,15 @@
+# it happend on window less than verison 1.2.2
+CVE-2019-15599
+
+# need to update webpack
+CVE-2020-7598
+GHSA-7fhm-mqm4-2wp7
+
+# Report portal use old jest version
+CVE-2020-7789
+
+# temp
+CVE-2021-27290
+
+# grpc need to update newrelic and firebase
+CVE-2020-7768

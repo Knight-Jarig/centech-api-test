@@ -1,0 +1,34 @@
+type Metadata {
+  row_id: ID
+  entity_id: ID
+  attribute_set_id: ID
+  parent_id: ID
+  path: String
+  position: String
+  level: String
+  children_count: String
+  url_path: String
+  product_count: String
+  is_anchor: String
+}
+
+type UrlRewrite {
+  entity_type: String
+  entity_id: Int
+  request_path: String
+  target_path: String
+  redirect_type: Int
+  store_id: Int
+  description: String
+  metadata: [Metadata]
+}
+
+type UrlRedirect {
+  target_path: String
+  redirect_type: Int
+}
+
+extend type Query {
+  urlRewrite(url: String): UrlRewrite
+  urlRedirect(url: String): UrlRedirect
+}

@@ -1,0 +1,50 @@
+type PaymentFormPayload {
+  paymentRequest: String!
+}
+
+type PaymentRequestForm {
+  url: String!
+  payload: PaymentFormPayload!
+}
+
+type PaymentOffileDetail {
+  orderId: String
+  paymentCode: String
+  referenceCode: String
+  agentpaymentCode: String
+  paymentExpiry: String
+  instructionUrl: String
+  barcodeValue: String
+  barcodeImage: String
+  qrCodeImage: String
+  amount: Float
+  currencyCode: String
+  merchantName: String
+  amountString: String
+}
+
+type PaymentOfflineResponse {
+  isSuccess: Boolean
+  responseCode: String
+  detail: PaymentOffileDetail
+  key: String
+}
+
+type PaymentDolfinDetail {
+  qrValue: String
+  qrCodeImage: String
+}
+
+type PaymentDolfinResponse {
+  isSuccess: Boolean
+  incrementId: String
+  key: String
+  failReason: Int
+  detail: PaymentDolfinDetail
+}
+
+extend type SetPaymentInfoResponse {
+  request_form: PaymentRequestForm
+  payment_offline: PaymentOfflineResponse
+  payment_dolfin: PaymentDolfinResponse
+}

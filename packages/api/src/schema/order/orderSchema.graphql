@@ -1,0 +1,266 @@
+type Order {
+  entity_id: Int
+  customer_email: String
+  increment_id: String
+  order_currency_code: String
+  total_due: Float
+  created_at: String
+  shipping_description: String
+  state: String
+  status: String
+  items: [OrderItem]
+  payment: Payment
+  status_histories: [StatusHistories]
+  billing_address: BillingAddress
+  extension_attributes: OrderExtensionAttributes
+  subtotal_incl_tax: Float
+  subtotal: Float
+  tax_amount: Float
+  grand_total: Float
+  discount_amount: Float
+  discount_description: String
+  shipping_incl_tax: Float
+  coupon_code: String
+  promotion_code: String
+  children: [Order!]
+}
+
+type OrderItem {
+  product_id: Int
+  name: String
+  sku: String
+  store_id: Int
+  qty_ordered: Float
+  qty_canceled: Float
+  price: Float
+  price_incl_tax: Float
+  row_total: Float
+  row_total_incl_tax: Float
+  tax_amount: Float
+  tax_canceled: Float
+  base_discount_amount: Float
+  base_discount_invoiced: Float
+  base_discount_tax_compensation_amount: Float
+  base_original_price: Float
+  base_price: Float
+  base_price_incl_tax: Float
+  base_row_invoiced: Float
+  base_row_total: Float
+  base_row_total_incl_tax: Float
+  base_tax_amount: Float
+  base_tax_invoiced: Float
+  discount_amount: Float
+  discount_invoiced: Float
+  discount_percent: Float
+  discount_tax_compensation_amount: Float
+  discount_tax_compensation_canceled: Float
+  original_price: Float
+  # product properties after extension
+  store_code: String
+  url_key: String
+  image: String
+  small_image: String
+  thumbnail: String
+  custom_attributes: ProductsCustomAttributes
+  product: Product
+  extension_attributes: OrderItemExtensionAttributes
+}
+
+type OrderItemExtensionAttributes {
+  line_items: [OrderLineItem!]
+  marketplace_info: MarketplaceInfo
+}
+
+type MarketplaceInfo {
+  seller_info: SellerInfo
+}
+
+type SellerInfo {
+  entity_id: ID!
+  name: String!
+  mirakl_seller_id: String!
+  url_key: String
+}
+
+type OrderLineItem {
+  entity_id: Int
+  order_id: Int
+  line_id: Int
+  line_number: Int
+  extension_attributes: OrderLineItemExtensionAttributes
+}
+
+type OrderLineItemExtensionAttributes {
+  status: String!
+  package_id: String
+  carrier: String
+  tracking_number: String
+  tracking_link: String
+}
+
+type BillingAddress {
+  address_type: String
+  company: String
+  firstname: String
+  lastname: String
+  telephone: String
+  email: String
+  prefix: String
+  country_id: String
+  city: String
+  postcode: String
+  region: String
+  region_code: String
+  region_id: String
+  street: [String]
+  extension_attributes: BillingAddressExtensionAttributes
+  custom_attributes(filter: [String]): JSON
+}
+
+type BillingAddressExtensionAttributes {
+  custom_attributes: [CustomAttributes]
+}
+
+type Payment {
+  method: String
+}
+
+type StatusHistories {
+  created_at: String
+  comment: String
+  status: String
+}
+
+type OrderExtensionAttributes {
+  shipping_assignments: [ShippingAssignment]
+  payment_method_label: String
+  order_status: String
+  delivery_status_history: [DeliveryStatusHistory]
+  mom_status_reason: String
+  retailer: Store
+  shipping_slot: ShippingSlot
+  t1c_redeem: T1cRedeem
+  t1c_earn_card_number: String
+  t1c_earn_points_estimate: String
+  t1c_earn_conversion_rate: String
+  gift_cards_amount: Int
+  order_children_ids: [Int]
+  order_children_items: [Order]
+    @deprecated(reason: "Use Extenstions orderWithOrderChildrenItems with field `Order.children` instead")
+  coupon: CouponDiscount
+  keep_at_store_hours: Int
+  shipping_method_label: String
+  order_package_status: [OrderPackageStatus]
+  bts_order_status: [BtsOrderStatus!]
+  pre_order_message: String
+  is_pre_order: Boolean
+}
+
+type BtsOrderStatus {
+  seller_id: Int
+  seller_name: String
+  status: String
+}
+
+type OrderPackageStatus {
+  shipment_provider: String
+  status: String
+  track_url: String
+  track_number: String
+  sold_by: String
+}
+
+type CouponDiscount {
+  discount_amount: Float
+  discount_amount_formatted: String
+  coupon_code: String
+}
+
+type T1cRedeem {
+  t1_cnumber: String
+  points_redeem: String
+  points_total: String
+  discount_amount: String
+  discount_amount_formatted: String
+}
+
+type ShippingSlot {
+  id: Int
+  date_time_from: String
+  date_time_to: String
+}
+
+type DeliveryStatusHistory {
+  status: String
+  created_at: String
+  reason: String
+}
+
+type ShippingAssignment {
+  shipping: Shipping
+  items: [ShippingItems]
+}
+
+type Shipping {
+  address: ShippingAddress
+  method: String
+}
+
+type ShippingItems {
+  store_id: String
+  name: String
+  product_type: String
+  sku: String
+}
+
+type ShippingAddress {
+  address_type: String
+  city: String
+  company: String
+  country_id: String
+  email: String
+  firstname: String
+  lastname: String
+  postcode: String
+  prefix: String
+  region: String
+  region_code: String
+  region_id: String
+  street: [String]
+  telephone: String
+  custom_attributes(filter: [String]): JSON
+}
+
+type OrderSearchResult {
+  orders: [Order]
+  totalCount: Int
+}
+
+type Orders {
+  items: [Order]
+  total_count: Int
+}
+
+input OrderFilter {
+  field: String
+  value: String
+}
+
+input OrderSort {
+  field: String
+  direction: String
+}
+
+input OrderSearchCriteria {
+  filters: [OrderFilter]
+  sortOrders: [OrderSort]
+  pageSize: Int
+  currentPage: Int
+}
+
+extend type Query {
+  orders(filter: FiltersQuery!): Orders
+  order(orderId: Int!): Order
+  orderByIncrementId(incrementId: String!, key: String): Order
+  orderByEmail(incrementId: String!, email: String!): Order
+}

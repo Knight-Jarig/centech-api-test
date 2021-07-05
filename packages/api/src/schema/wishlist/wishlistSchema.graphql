@@ -1,0 +1,96 @@
+type WishlistItem {
+  wishlist_item_id: Int!
+  wishlist_id: Int!
+  product_id: Int
+  store_id: Int
+  added_at: String
+  description: String
+  qty: String
+  product_name: String
+  product: Product
+  sku: String
+  custom_attributes: [CustomAttributes]
+}
+
+type Wishlist {
+  wishlist_id: Int!
+  customer_id: Int!
+  name: String
+  sharing_code: String
+  updated_at: String
+  visibility: Int
+  shared: Int
+  items: [WishlistItem]
+}
+
+type WishlistSearchResult {
+  items: [Wishlist]
+}
+
+type WishlistItemSearchResult {
+  items: [WishlistItem]
+  total_count: Int
+}
+
+input ItemInput {
+  product_id: Int!
+  store_id: Int
+  description: String
+  qty: String!
+}
+
+input CreateWishlistInput {
+  name: String
+  customer_id: Int!
+  items: [ItemInput]!
+}
+
+input UpdateWishlistInput {
+  wishlist_id: Int!
+  name: String
+  items: [ItemInput]
+  visibility: Int
+}
+
+input CreateWishlistItemInput {
+  wishlist_id: Int
+  product_id: Int!
+  store_id: Int
+  qty: String
+  custom_attributes: [CustomAttributesInput]
+}
+
+input UpdateWishlistItemInput {
+  wishlist_item_id: Int!
+  product_id: Int
+  store_id: Int
+  qty: String
+  custom_attributes: [CustomAttributesInput]
+}
+
+input WishlistFilterInput {
+  field: String
+  value: String
+}
+
+# new version type
+type Wishlists {
+  items: [Wishlist]
+  total_count: Int
+}
+
+extend type Query {
+  wishlists(filter: FiltersQuery!): Wishlists
+}
+
+extend type Mutation {
+  # wishlist
+  createWishlist(input: CreateWishlistInput): Wishlist
+  updateWishlist(input: UpdateWishlistInput): Wishlist
+  deleteWishlist(id: Int!): [String]
+
+  # wishlistItem
+  createWishlistItem(input: CreateWishlistItemInput, customer_id: Int): WishlistItem
+  updateWishlistItem(input: UpdateWishlistItemInput): WishlistItem
+  deleteWishlistItem(id: Int!): [String]
+}

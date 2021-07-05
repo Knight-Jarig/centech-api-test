@@ -1,0 +1,25 @@
+enum StockLevelStatus {
+  FULL_STOCK
+  MEDIUM_STOCK
+  OUT_OF_STOCK
+}
+
+type StoreWithStockLevel implements StoreInterface {
+  """
+   `id` is Store.id-Product.sku
+  """
+  id: ID
+  name: String
+  is_active: Boolean
+  seller_code: String
+  attribute_set_name: String
+  custom_attributes: StoreCustomAttribute
+  extension_attributes: StoreExtensionAttribute
+
+  stock_level: StockLevelStatus!
+  stock_quantity: Int!
+}
+
+extend type Query {
+  storeWithStockLevel(sku: String!): [StoreWithStockLevel]!
+}

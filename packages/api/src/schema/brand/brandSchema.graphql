@@ -1,0 +1,89 @@
+type Brand {
+  brand_id: ID!
+  name: String!
+  url_key: String
+  logo: String
+  meta_title: String
+  meta_description: String
+  extension_attributes: BrandExtensionAttributes
+}
+
+type BrandExtensionAttributes {
+  only_central: Int
+  position: Int
+  product_count: Int
+}
+
+type BrandDetail {
+  brand_id: ID!
+  attribute_id: Int
+  attribute_code: String
+  option_id: Int
+  name: String
+  website_ids: [Int]
+  url_key: String
+  logo: String
+  is_featured: Boolean
+  content: [BrandContent]
+  meta_title: String
+  meta_description: String
+  description: String
+  brand_additional_products: [BrandAdditionalProduct]
+  extension_attributes: BrandDetailExtensionAttributess
+}
+
+type BrandContent {
+  brand_id: Int
+  store_id: Int
+  meta_title: String
+  meta_description: String
+  description: String
+}
+
+type BrandAdditionalProduct {
+  product_id: Int
+  position: Int
+}
+
+type BrandDetailExtensionAttributess {
+  parent_category: Int
+  menu_css: String
+  content_css: String
+  brand_image_url: String
+  position: Int
+  product_collections: [BrandProductCollection]
+  product_count: Int
+  product_name_special: Boolean
+  hide_product_original_price: Boolean
+  hide_t1c_redeemable_amount: Boolean
+  allow_product_review: Boolean
+  banners: JSON
+  sort_orders: [BrandSortOrders!]
+  disable_best_seller_section: Boolean
+  disable_new_arrival_section: Boolean
+}
+
+type BrandProductCollection {
+  brand_collection_id: ID!
+  brand_id: Int
+  url: String
+  content: String
+  identification: String
+  name: String
+  description: String
+  brand_collection_products: [BrandAdditionalProduct]
+  position: Int
+  deep_link: String
+  is_official: Boolean
+  collection_products_textarea: String
+}
+
+type BrandSortOrders {
+  field: String!
+  direction: String!
+}
+
+extend type Query {
+  brands(input: FiltersQuery): [Brand]
+  brandDetail(brandId: Int): BrandDetail
+}

@@ -1,0 +1,17 @@
+type DeliveryOptionItem {
+  shipping_method: String
+  delivery_lead_time_message: String
+  delivery_free_message: String
+  shipping_fee: String
+  shipping_method_label: String
+  extension_attributes: DeliveryOptionItemExtensionAttributes
+  is_out_of_service: Boolean
+}
+
+type DeliveryOptionItemExtensionAttributes {
+  is_pre_order: Boolean
+}
+
+extend type Query {
+  deliveryOptions(storeCode: String!, sku: String!, postcode: String): [DeliveryOptionItem]
+}

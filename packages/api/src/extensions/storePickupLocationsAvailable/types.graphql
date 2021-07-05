@@ -1,0 +1,19 @@
+type StorePickupLocationsAvailable {
+  id: ID!
+  name: String
+  storeCode: String
+  isActive: Boolean
+  address: PickupStoreLocationAddress
+  openingHours: [PickupStoreLocationOpeningHour]
+  image: String
+  allowPickAtStore: Boolean
+  isDisplayAsStoreInformation: Boolean
+  storePickup: PickupStoreLocationStorePickup
+  stockStatusCode: String
+  stockStatusLabel: String
+  distance: PickupStoresLocationDistance
+}
+
+extend type Query {
+  storePickupLocationsAvailable(sku: String!, filter: PickupStoreLocationFilter, limit: Int, offset: Int): [StorePickupLocationsAvailable]
+}

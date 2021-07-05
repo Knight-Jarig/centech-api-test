@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "chalk": "^4.1.0",
+    "fs-extra": "^9.0.1"
+  },
+  "scripts": {
+    "doc": "node docgen.js"
+  },
+  "license": "MIT"
+}

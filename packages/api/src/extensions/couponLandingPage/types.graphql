@@ -1,0 +1,27 @@
+input CouponInput {
+  campaignId: Int!
+  page: Int!
+  batch: Int!
+}
+
+input CustomerCouponInput {
+  campaignId: Int!
+  customer_id: Int
+  page: Int!
+  batch: Int!
+}
+
+input AssignCouponInput {
+  campaign_id: Int!
+  customer_id: Int
+  rule_id: Int
+}
+
+extend type Query {
+  couponList(input: CouponInput!): CouponResponse
+  customerCouponList(input: CustomerCouponInput!): CouponResponse
+}
+
+extend type Mutation {
+  assignCoupon(input: AssignCouponInput!): AssignCouponResponse
+}

@@ -1,0 +1,14 @@
+type V2Brand {
+  id: ID!
+  name: String!
+  imageUrl: String
+  contentCss: String
+  logo: String
+  urlKey: String!
+  description: String
+}
+
+extend type Query {
+  v2BrandSearch(input: FiltersQuery!): [V2Brand]
+  v2BrandById(id: ID!): V2Brand
+}

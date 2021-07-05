@@ -1,0 +1,17 @@
+export const mockCmsPageResponseMDC = {
+  id: 1,
+  identifier: 'test/page21',
+  title: 'test 21',
+  page_layout: 'cms-full-width',
+  meta_title: '',
+  meta_keywords: '',
+  meta_description: '',
+  content_heading: '',
+  content: 'centent',
+  creation_time: '2020-06-01 06:10:32',
+  update_time: '2020-06-17 14:48:34',
+  sort_order: '0',
+  layout_update_xml: '',
+  custom_theme: '',
+  active: true,
+};

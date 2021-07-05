@@ -1,0 +1,17 @@
+type Newsletter {
+  result: String
+}
+
+type Subscribe {
+  success: String
+  message: String
+}
+
+input NewsletterOptional {
+  gender: Gender
+}
+
+extend type Mutation {
+  newsletter(email: String!, optional: NewsletterOptional): String
+  subscribe(email: String!): Subscribe
+}

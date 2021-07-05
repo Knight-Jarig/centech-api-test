@@ -1,0 +1,73 @@
+scalar JSON
+scalar DateTime
+scalar PageSize
+
+type ResponseMessage {
+  message: String
+  status: Boolean
+}
+input FiltersQuery {
+  page: Int
+  size: Int
+  filterGroups: [FilterGroups]
+  sortOrders: [SortOrder]
+}
+
+type CustomAttributes {
+  attribute_code: String
+  value: String
+  name: String
+}
+
+input FilterGroups {
+  filters: [Filters]
+}
+
+input Filters {
+  field: String!
+  value: String!
+  conditionType: ConditionType
+}
+
+input SortOrder {
+  field: String
+  direction: SortDirection
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+enum ConditionType {
+  eq
+  finset
+  from
+  gt
+  gteq
+  in
+  like
+  lt
+  lteq
+  moreq
+  neq
+  nin
+  notnull
+  NULL
+  to
+}
+
+input CustomAttributesInput {
+  attribute_code: String
+  value: String
+  name: String
+}
+
+type Query {
+  hello: String!
+  version: String!
+}
+
+type Mutation {
+  hello: String!
+}

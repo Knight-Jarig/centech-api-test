@@ -1,0 +1,59 @@
+type VipListResponse {
+  status: Boolean
+  urls: [String]
+}
+
+type VipValidateResponse {
+  status: Boolean
+  url: String
+  email: String
+  phone: String
+  name: String
+  ids: String
+  need_assistance: Int
+  token: String
+  t1No: String
+}
+
+type VipNeedAssistanceResponse {
+  status: Boolean
+  urls: [String]
+}
+
+type VipInterestResponse {
+  status: Boolean
+  email: String
+  phone: String
+  name: String
+  ids: String
+  need_assistance: Int
+}
+
+input VipValidateInput {
+  url: String!
+  email: String
+  phone: String
+  t1No: String!
+}
+
+input VipNeedAssistanceInput {
+  url: String!
+  t1No: String!
+}
+
+input VipInterestInput {
+  url: String!
+  t1No: String!
+  ids: String!
+}
+
+extend type Query {
+  vipList: VipListResponse
+  vipWithToken(token: String!): VipValidateResponse
+}
+
+extend type Mutation {
+  vipValidate(input: VipValidateInput!): VipValidateResponse
+  vipNeedAssistance(input: VipNeedAssistanceInput!): VipNeedAssistanceResponse
+  vipInterest(input: VipInterestInput!): VipInterestResponse
+}

@@ -1,0 +1,51 @@
+{
+  "name": "falcon",
+  "private": true,
+  "version": "2.29.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/centraldigital/centech-api.git"
+  },
+  "scripts": {
+    "start": "yarn workspace @central-tech/api start",
+    "dev": "yarn workspace @central-tech/api dev",
+    "package:api": "yarn workspace @central-tech/api package",
+    "deploy:api": "yarn workspace @central-tech/api deploy",
+    "deploy:graphql-request": "yarn workspace @central-tech/graphql-request publish",
+    "deploy:operation": "yarn workspace @central-tech/operation publish",
+    "deploy:react-hooks": "yarn workspace @central-tech/react-hooks publish",
+    "deploy:schema": "yarn workspace @central-tech/schema publish",
+    "deploy": "yarn deploy:graphql-request && yarn deploy:operation && yarn deploy:react-hooks && yarn deploy:schema",
+    "prerelease": "yarn codegen && yarn build",
+    "npm:standard-version": "npx standard-version",
+    "npm:standard-version:hotfix": "npx standard-version --release-as patch",
+    "build": "yarn codegen && yarn build:operation && yarn build:hooks && yarn build:request && yarn build:schema",
+    "build:api": "yarn workspace @central-tech/api build",
+    "build:operation": "yarn workspace @central-tech/operation build",
+    "build:hooks": "yarn workspace @central-tech/react-hooks build",
+    "build:request": "yarn workspace @central-tech/graphql-request build",
+    "build:schema": "yarn workspace @central-tech/schema build",
+    "codegen": "yarn codegen:schema && yarn codegen:operation && yarn codegen:hooks && yarn codegen:request",
+    "codegen:schema": "yarn workspace @central-tech/api codegen",
+    "codegen:operation": "yarn workspace @central-tech/operation codegen",
+    "codegen:hooks": "yarn workspace @central-tech/react-hooks codegen",
+    "codegen:request": "yarn workspace @central-tech/graphql-request codegen",
+    "sonar": "yarn workspace @central-tech/api sonar",
+    "report": "yarn workspace @central-tech/api test:report"
+  },
+  "resolutions": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}

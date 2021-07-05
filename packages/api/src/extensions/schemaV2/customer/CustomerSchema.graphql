@@ -1,0 +1,91 @@
+enum V2Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+type V2Customer {
+  id: ID!
+  groupId: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  createdIn: String
+  defaultBilling: String
+  email: String!
+  firstname: String!
+  lastname: String!
+  storeId: ID
+  websiteId: ID!
+  addresses: [V2CustomerAddress!]!
+  disableAutoGroupChange: Int
+  isSubscribed: Boolean!
+  phone: String
+  profileImage: String!
+  t1cNo: String
+  t1cPhone: String
+  t1cApiVersion: String
+  language: String
+  marketOpen: String
+  needReacceptConsents: Boolean!
+  defaultShipping: String
+  dob: String
+  gender: V2Gender
+  message: String
+  taxId: ID
+}
+
+type V2CustomerAddress {
+  id: ID!
+  firstname: String!
+  lastname: String!
+  telephone: String
+  building: String
+  addressLine: String!
+  subdistrict: V2Place!
+  district: V2Place!
+  province: V2Province!
+  postcode: String!
+  addressName: String
+  customerAddressType: V2AddressType!
+  fullTaxType: V2TaxType
+  branchId: ID
+  countryId: ID!
+  isDefaultShipping: Boolean!
+  city: String
+  customerId: ID
+  street: [String]
+  vatId: ID
+  company: String
+  isDefaultBilling: Boolean!
+  locationName: String!
+  latitude: String!
+  longitude: String!
+}
+
+input V2UpdateCustomerT1Input {
+  email: String!
+  firstname: String!
+  lastname: String!
+  websiteId: ID!
+  t1cNumber: String!
+  t1ApiVersion: String!
+}
+
+input V2UpdateCustomerT1ByIdInput {
+  id: ID!
+  email: String!
+  firstname: String!
+  lastname: String!
+  websiteId: ID!
+  t1cNumber: String!
+  t1ApiVersion: String!
+}
+
+extend type Query {
+  v2Customer: V2Customer
+}
+
+extend type Mutation {
+  v2UpdateCustomerT1(input: V2UpdateCustomerT1Input!): V2Customer
+  v2UpdateCustomerT1ById(input: V2UpdateCustomerT1ByIdInput!): V2Customer
+}

@@ -1,0 +1,23 @@
+type Consent {
+  marketing: String!
+  privacy_policy: String!
+  version: String!
+}
+enum ConsentType {
+  PRIVACY
+  MARKETING
+}
+
+input AcceptConsentInput {
+  cartId: String
+  email: String
+  accept_consents: [ConsentType!]!
+}
+
+extend type Query {
+  consentInfo: Consent
+}
+
+extend type Mutation {
+  consent(input: AcceptConsentInput!): Customer
+}

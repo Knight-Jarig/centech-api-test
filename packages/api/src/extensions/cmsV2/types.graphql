@@ -1,0 +1,248 @@
+type CMSMobileContent {
+    status: String
+    cms_list: [CMSMobileItemInterface]
+}
+enum ViewType {
+  TEXT
+  IMAGE
+  BANNER
+  ONE_COLUMN_HORIZONTAL_CAROUSEL
+  TWO_COLUMN_VERTICAL_CAROUSEL
+  DIVIDER
+  VIDEO
+  HEADER
+  BUTTON
+  PRODUCT
+  PRODUCT_SCROLL
+  IMAGE_LABEL
+  CATEGORY_BAR
+  SECTION_TITLE
+  VIDEO_SELECTOR
+  VIDEO_ITEM
+}
+interface CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+}
+
+type CMSMobileItemText implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: TextProperty
+  styles: TextStyle
+}
+
+type CMSMobileItemImage implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: ImageProperty
+}
+
+type CMSMobileItemBanner implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: BannerProperty
+  items: [CMSMobileItemInterface]
+  data: CMSMobileItemInterface
+}
+
+type CMSMobileItemOneColumnHorizontalCarousel implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: OneColumnHorizontalCarouselProperty
+  items: [CMSMobileItemInterface]
+  data: CMSMobileItemInterface
+}
+
+type CMSMobileItemDivider implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  styles: DividerStyle
+}
+
+type CMSMobileItemVideo implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: VideoProperty
+  styles: VideoStyle
+}
+
+type CMSMobileItemHeader implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: HeaderProperty
+}
+
+type CMSMobileItemButton implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: ButtonProperty
+  styles: ButtonStyle
+}
+
+type CMSMobileItemProduct implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: ProductProperty
+  styles: ProductStyle
+}
+type CMSMobileItemProductScroll implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: ProductScrollProperty
+  items: [CMSMobileItemInterface]
+  data: CMSMobileItemInterface
+}
+type CMSMobileItemTwoColumnVerticalCarousel implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: TwoColumnVerticalCarouselProperty
+  data: CMSMobileItemInterface
+  items: [CMSMobileItemInterface]
+}
+type CMSMobileItemImageLabel implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: ImageLabelProperty
+  styles: ImageLabelStyle
+}
+
+type CMSMobileItemCategoryBar implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: CategoryBarProperty
+}
+
+type CMSMobileItemSectionTitle implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: SectionTitleProperty
+  styles: SectionTitleStyle
+}
+
+type SectionTitleProperty {
+  text: String
+  description: String
+  viewAll: Boolean
+}
+
+type SectionTitleStyle {
+  showLines: Boolean
+  textSize: Float
+}
+
+type CMSMobileItemVideoItem implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  properties: VideoItemProperty
+}
+
+type VideoItemProperty {
+  videoId: String
+  title: String
+}
+
+type CMSMobileItemVideoSelector implements CMSMobileItemInterface {
+  viewType: String
+  deeplink: String
+  styles: CMSMobileItemVideoSelectorStyle
+  items: [CMSMobileItemInterface]
+}
+
+type CMSMobileItemVideoSelectorStyle {
+  autoplay: Boolean
+}
+
+type CategoryBarProperty {
+  parentCategoryId: String
+}
+
+type ImageLabelProperty {
+  text: String
+  url: String
+}
+type ImageLabelStyle {
+  backgroundColor: String
+}
+
+type TwoColumnVerticalCarouselProperty {
+  title: String
+  limit: Int
+}
+
+type ProductScrollProperty {
+  maxItemsSize: Int
+  minimumVisible: Int
+}
+
+type ProductProperty {
+  sku: String
+}
+type ProductStyle {
+  titleColor: String
+}
+
+type ButtonStyle {
+  cornerRadius: Float
+  backgroundColor: String
+  iconGravity: String
+  textColor: String
+  outline: Int
+  outlineColor: String
+  textSize: Float
+  marginRight: Int
+  marginLeft: Int
+}
+type ButtonProperty {
+  text: String
+  icon: String
+}
+
+type TextProperty {
+  text: String
+}
+
+type BannerProperty {
+  itemDeeplink: String
+  showBullet: Boolean
+}
+type OneColumnHorizontalCarouselProperty {
+  title: String
+  maxItemsSize: Int
+  minimumVisible: Int
+}
+type ImageProperty {
+  url: String
+}
+type HeaderProperty {
+  text: String
+  viewAll: Boolean
+}
+
+type TextStyle {
+  textSize: Float
+  textColor: String
+  textAlignment: String
+}
+
+type DividerStyle {
+  height: Int
+  color: String
+  marginLeft: Int
+  marginRight: Int
+}
+type VideoStyle{
+  autoplay: Boolean
+}
+type VideoProperty {
+  videoId: String
+}
+
+input CmsMobileFilterInput {
+  identifier: String
+  url_key: String
+}
+
+extend type Query {
+  cmsMobile(filter: CmsMobileFilterInput): CMSMobileContent
+}
