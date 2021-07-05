@@ -215,6 +215,7 @@ export class ProductUseCase extends DataSource {
     if (!breadcrumb || breadcrumb.length === 0) {
       return [];
     }
+    console.log('Test second commit.');
 
     const mapChildrenSku = (children ?? []).map(child => child.product.sku);
     const excludeSkus = [sku, ...mapChildrenSku];
